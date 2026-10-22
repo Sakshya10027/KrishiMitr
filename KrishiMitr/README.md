@@ -58,10 +58,17 @@
    - **Legacy Dashboard:** Cycle I (2015-17) vs Cycle II (2017-19) national comparisons, state-by-state targets vs samples tested with completion percentages, table/chart visualizer, and live CSV export.
    - **School Soil Health Dashboard:** Participatory metrics (130 Schools, 42 States, 51,628 Students, 54,617 Farmers, 22,771 Samples, 7,500 SHCs) with state-wise and nation-wide breakdowns.
 
-5. **Interactive GIS Soil Nutrient Maps (`/NutrientMapCycleII` & `/NutrientMapModelVillages`):**
-   - Interactive SVG map of India with nutrient layers: Nitrogen, Phosphorus, Potassium, Organic Carbon, pH, and Zinc.
-   - Color-coded fertility classification (Low Deficient [Red], Medium [Orange], High/Sufficient [Green], Alkaline [Blue]).
-   - Interactive state selection with localized deficiency advisories.
+5. **Interactive GIS Soil Nutrient Maps & District-Level Explorer (`/NutrientMapCycleII` & `/NutrientMapModelVillages`):**
+   - **Dual Interactive Modes:**
+     - **National State Map:** Real cartographic geographic map rendering all 36 States & UTs with layer overlays.
+     - **District-Level Soil Nutrient Explorer:** Drill down into any State to explore all constituent districts (e.g., all 75 districts of Uttar Pradesh, 23 of Punjab, 36 of Maharashtra, etc.).
+   - **Complete 12-Parameter Lab Analysis Per District:** Available Nitrogen (N), Available Phosphorus (P), Available Potassium (K), Organic Carbon (OC), Soil pH Reaction, Electrical Conductivity (EC), Zinc (Zn), Sulphur (S), Iron (Fe), Copper (Cu), Manganese (Mn), and Boron (B).
+   - **Dual Views & Export:** Interactive color-coded District Cards View or Full Tabular Comparison with live CSV export (`Export CSV`).
+   - **ICAR-STCR Fertilizer Guidance:** Site-specific crop fertilizer dosages and dominant soil limitations.
+   - **Validated Real Data Sources & Citations:**
+     - *Department of Agriculture & Farmers Welfare (DA&FW)* — Soil Health Card National Portal (`soilhealth.dac.gov.in`).
+     - *ICAR - Indian Institute of Soil Science (IISS), Bhopal* & All India Coordinated Research Project on Soil Test Crop Response (AICRP-STCR).
+     - *Sampling Methodology:* GPS-tagged grid collection (2.5 ha irrigated, 10 ha rainfed).
 
 6. **National Mission on Natural Farming (`/National_Mission_on_Natural_Farming`):**
    - Comprehensive portal section detailing sustainable chemical-free agriculture.

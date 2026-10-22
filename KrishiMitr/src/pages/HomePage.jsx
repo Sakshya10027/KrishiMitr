@@ -80,12 +80,12 @@ export default function HomePage() {
               <div className="shc-feature-icon-wrap">
                 <FileCheck size={24} className="shc-feature-icon" />
               </div>
-              <h3>{t('hero.getCard', 'Get Soil Health Card')}</h3>
+              <h3>{t('features.cardTitle', 'Get Soil Health Card')}</h3>
               <p>
-                {t('features.schemeDesc', 'Search, view, and print your 12-parameter Soil Health Card with crop-specific ICAR-STCR fertilizer dosages.')}
+                {t('features.cardDesc', 'Search, view, and print your 12-parameter Soil Health Card with crop-specific ICAR-STCR fertilizer dosages.')}
               </p>
               <Link to="/soilhealthcard" className="shc-feature-link">
-                <span>{t('search.downloadPdf', 'Download Card')}</span>
+                <span>{t('features.cardLink', 'Download Card')}</span>
                 <ArrowRight size={16} />
               </Link>
             </div>
@@ -105,17 +105,17 @@ export default function HomePage() {
               </Link>
             </div>
 
-            {/* Card 4: Balanced Fertilizer */}
+            {/* Card 4: Transforming Indian Agriculture in Numbers (Dashboard) */}
             <div className="shc-feature-card">
               <div className="shc-feature-icon-wrap">
                 <TrendingUp size={24} className="shc-feature-icon" />
               </div>
-              <h3>{t('stats.heading', 'Balanced Nutrition')}</h3>
+              <h3>{t('features.dashboardTitle', 'Transforming Indian Agriculture in Numbers')}</h3>
               <p>
-                Scientific STCR formulas balance primary (NPK), secondary (S), and micronutrients (Zn, Fe, Cu, Mn, B) to cut input costs.
+                {t('features.dashboardDesc', 'Track Cycle I & II national milestones, sample testing targets vs. collections, and real-time state progress.')}
               </p>
-              <Link to="/aboutus" className="shc-feature-link">
-                <span>{t('features.schemeLink', 'Read Guidance')}</span>
+              <Link to="/dashboard" className="shc-feature-link">
+                <span>{t('features.dashboardLink', 'View Dashboard')}</span>
                 <ArrowRight size={16} />
               </Link>
             </div>
