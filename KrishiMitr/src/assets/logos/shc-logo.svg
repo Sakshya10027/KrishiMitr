@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="100%" height="100%">
+  <defs>
+    <clipPath id="shc-rounded">
+      <rect x="10" y="10" width="180" height="180" rx="20" ry="20" />
+    </clipPath>
+  </defs>
+
+  <!-- Container Box with Rounded Edges -->
+  <g clip-path="url(#shc-rounded)">
+    <!-- Top Green Section -->
+    <rect x="10" y="10" width="180" height="96" fill="#018840" />
+    
+    <!-- Hindi text on top -->
+    <text x="100" y="44" fill="#ffffff" font-family="'Noto Sans Devanagari', 'Arial', sans-serif" font-size="16" font-weight="bold" text-anchor="middle">सॉयल हेल्थ</text>
+    <text x="100" y="66" fill="#ffffff" font-family="'Noto Sans Devanagari', 'Arial', sans-serif" font-size="16" font-weight="bold" text-anchor="middle">कार्ड</text>
+
+    <!-- Bottom Warm Ochre / Orange Soil Section -->
+    <rect x="10" y="106" width="180" height="84" fill="#E65100" />
+    <path d="M10 106 Q100 125 190 106 L190 190 L10 190 Z" fill="#D84315" />
+
+    <!-- Seedling / Plant growing from the hands -->
+    <!-- Left Leaf -->
+    <path d="M100 95 C85 85, 80 65, 82 50 C95 55, 102 75, 100 95 Z" fill="#7CB342" stroke="#ffffff" stroke-width="2" />
+    <!-- Right Leaf -->
+    <path d="M100 95 C115 85, 120 65, 118 50 C105 55, 98 75, 100 95 Z" fill="#8BC34A" stroke="#ffffff" stroke-width="2" />
+    <!-- Central Shoot -->
+    <circle cx="100" cy="50" r="4" fill="#CDDC39" stroke="#ffffff" stroke-width="1.5" />
+
+    <!-- Supporting Caring Hands in White / Cream -->
+    <path d="M60 145 C65 125, 85 110, 100 110 C115 110, 135 125, 140 145 C130 155, 115 160, 100 160 C85 160, 70 155, 60 145 Z" fill="#FFF8E1" stroke="#ffffff" stroke-width="1.5" />
+    <!-- Hand Palm details -->
+    <path d="M80 135 L100 115 L120 135" fill="none" stroke="#D84315" stroke-width="2.5" stroke-linecap="round" />
+    <circle cx="100" cy="132" r="5" fill="#E65100" />
+
+    <!-- Hindi Slogan at bottom -->
+    <text x="100" y="178" fill="#ffffff" font-family="'Noto Sans Devanagari', 'Arial', sans-serif" font-size="12" font-weight="bold" text-anchor="middle">स्वस्थ धरा, खेत हरा</text>
+  </g>
+  <!-- Outer border -->
+  <rect x="10" y="10" width="180" height="180" rx="20" ry="20" fill="none" stroke="#2E7D32" stroke-width="3" />
+</svg>

@@ -1,0 +1,106 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 380" width="100%" height="100%">
+  <defs>
+    <linearGradient id="skyGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#E3F2FD" />
+      <stop offset="100%" stop-color="#FAFAFA" />
+    </linearGradient>
+    <linearGradient id="soilWave" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#757575" />
+      <stop offset="100%" stop-color="#424242" />
+    </linearGradient>
+  </defs>
+
+  <!-- Clean backdrop -->
+  <rect width="1000" height="380" fill="url(#skyGrad)" />
+  
+  <!-- Right dark curved slant matching the official portal -->
+  <path d="M420 380 Q650 280 1000 130 L1000 380 Z" fill="url(#soilWave)" opacity="0.85" />
+
+  <!-- Farmers Group Illustration (diverse Indian states: Punjab turban, Rajasthan pagri, South Indian angavastram, women farmers with produce basket) -->
+  <g transform="translate(40, 60)">
+    <!-- Woman Farmer 1 (Left - holding vegetables) -->
+    <g transform="translate(60, 90)">
+      <!-- Orange dupatta -->
+      <path d="M30 60 C20 40, 20 20, 50 15 C80 20, 80 40, 70 60 L85 160 C70 170, 30 170, 15 160 Z" fill="#E65100" />
+      <ellipse cx="50" cy="45" rx="18" ry="22" fill="#D7A177" />
+      <circle cx="50" cy="38" r="2" fill="#B71C1C" />
+      <path d="M35 42 Q50 38 65 42" stroke="#212121" stroke-width="2" fill="none" />
+      <ellipse cx="43" cy="48" rx="2" ry="1.5" fill="#212121" />
+      <ellipse cx="57" cy="48" rx="2" ry="1.5" fill="#212121" />
+      <path d="M45 56 Q50 60 55 56" stroke="#B71C1C" stroke-width="2" fill="none" />
+      <!-- Basket of fresh vegetables -->
+      <ellipse cx="50" cy="140" rx="42" ry="22" fill="#8D6E63" stroke="#5D4037" stroke-width="3" />
+      <circle cx="35" cy="130" r="12" fill="#E53935" /> <!-- Tomato -->
+      <circle cx="50" cy="125" r="14" fill="#FB8C00" /> <!-- Pumpkin/Carrot -->
+      <ellipse cx="65" cy="128" rx="10" ry="16" fill="#43A047" transform="rotate(25 65 128)" /> <!-- Cucumber/Gourd -->
+    </g>
+
+    <!-- Farmer 2 (Yellow Pagri / Turban) -->
+    <g transform="translate(180, 70)">
+      <!-- Yellow Pagri -->
+      <ellipse cx="60" cy="30" rx="36" ry="24" fill="#FFB300" stroke="#FFA000" stroke-width="3" />
+      <ellipse cx="60" cy="55" rx="20" ry="25" fill="#C68642" />
+      <path d="M45 68 Q60 76 75 68" stroke="#3E2723" stroke-width="3.5" fill="none" /> <!-- Moustache -->
+      <path d="M30 85 L90 85 L105 180 L15 180 Z" fill="#FFFFFF" stroke="#E0E0E0" stroke-width="2" /> <!-- White Kurta -->
+    </g>
+
+    <!-- Farmer 3 (Center - Wheat stalk) -->
+    <g transform="translate(300, 40)">
+      <!-- Cream / Beige Pagri -->
+      <ellipse cx="65" cy="35" rx="38" ry="26" fill="#D7CCC8" stroke="#BCAAA4" stroke-width="2" />
+      <ellipse cx="65" cy="65" rx="22" ry="27" fill="#BD8249" />
+      <path d="M48 80 Q65 90 82 80" stroke="#212121" stroke-width="4" fill="none" /> <!-- Moustache -->
+      <path d="M30 98 L100 98 L115 210 L15 210 Z" fill="#FAFAFA" stroke="#E0E0E0" stroke-width="2" />
+      <!-- Golden Wheat Sheaf held in hand -->
+      <path d="M85 100 Q105 60 120 20" stroke="#C5A059" stroke-width="4" fill="none" />
+      <ellipse cx="108" cy="45" rx="6" ry="14" fill="#FDD835" transform="rotate(30 108 45)" />
+      <ellipse cx="118" cy="25" rx="6" ry="14" fill="#FDD835" transform="rotate(30 118 25)" />
+    </g>
+
+    <!-- National Dignitary / Leader (Center-Right in Ochre/Saffron Bundi Jacket) -->
+    <g transform="translate(430, 20)">
+      <!-- Silver hair and beard -->
+      <ellipse cx="70" cy="50" rx="24" ry="28" fill="#F5CBA7" />
+      <path d="M46 45 C46 25, 94 25, 94 45 C92 32, 48 32, 46 45 Z" fill="#ECEFF1" />
+      <!-- White beard -->
+      <path d="M50 62 C50 88, 90 88, 90 62 C85 80, 55 80, 50 62 Z" fill="#ECEFF1" stroke="#CFD8DC" stroke-width="1.5" />
+      <!-- Spectacles -->
+      <rect x="52" y="44" width="14" height="10" rx="2" fill="none" stroke="#37474F" stroke-width="1.5" />
+      <rect x="74" y="44" width="14" height="10" rx="2" fill="none" stroke="#37474F" stroke-width="1.5" />
+      <line x1="66" y1="48" x2="74" y2="48" stroke="#37474F" stroke-width="1.5" />
+      <!-- Kurta & Saffron / Ochre Modi Nehru Jacket -->
+      <path d="M30 85 L110 85 L125 240 L15 240 Z" fill="#FFFFFF" />
+      <path d="M40 92 L100 92 L115 240 L25 240 Z" fill="#E67E22" stroke="#D35400" stroke-width="2" />
+      <!-- Namaste hands folded in greeting -->
+      <path d="M60 125 L70 110 L80 125 L75 145 L65 145 Z" fill="#F5CBA7" stroke="#D35400" stroke-width="1.5" />
+    </g>
+
+    <!-- Farmer 4 (Sikh Farmer with Blue/Grey Dastar Turban) -->
+    <g transform="translate(570, 45)">
+      <ellipse cx="60" cy="35" rx="35" ry="26" fill="#455A64" stroke="#37474F" stroke-width="2" />
+      <ellipse cx="60" cy="65" rx="20" ry="25" fill="#BD8249" />
+      <path d="M45 78 C45 92, 75 92, 75 78 Z" fill="#212121" /> <!-- Full Beard -->
+      <path d="M25 95 L95 95 L110 200 L10 200 Z" fill="#FFFFFF" stroke="#CFD8DC" stroke-width="2" />
+    </g>
+
+    <!-- Woman Farmer 2 (Yellow Saree with Grains) -->
+    <g transform="translate(690, 75)">
+      <path d="M30 55 C20 35, 20 18, 50 15 C80 18, 80 35, 70 55 L85 160 C70 170, 30 170, 15 160 Z" fill="#F57F17" />
+      <ellipse cx="50" cy="42" rx="17" ry="21" fill="#C68642" />
+      <circle cx="50" cy="35" r="2" fill="#C2185B" />
+      <!-- Sheaf of green paddy crop in hand -->
+      <path d="M65 95 L85 45" stroke="#388E3C" stroke-width="3" />
+      <ellipse cx="85" cy="45" rx="5" ry="12" fill="#4CAF50" transform="rotate(20 85 45)" />
+    </g>
+
+    <!-- Farmer 5 (White turban holding golden wheat) -->
+    <g transform="translate(800, 70)">
+      <ellipse cx="60" cy="32" rx="34" ry="24" fill="#FFFFFF" stroke="#E0E0E0" stroke-width="2" />
+      <ellipse cx="60" cy="60" rx="21" ry="25" fill="#A16938" />
+      <path d="M44 72 Q60 82 76 72" stroke="#212121" stroke-width="3" fill="none" />
+      <path d="M25 90 L95 90 L110 180 L10 180 Z" fill="#FFFFFF" stroke="#E0E0E0" stroke-width="1.5" />
+      <path d="M85 80 L105 35" stroke="#C5A059" stroke-width="3" />
+      <ellipse cx="105" cy="35" rx="6" ry="14" fill="#FDD835" transform="rotate(25 105 35)" />
+    </g>
+  </g>
+</svg>

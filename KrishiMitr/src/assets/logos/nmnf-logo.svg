@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="100%" height="100%">
+  <!-- NMNF Circular Emblem -->
+  <circle cx="100" cy="100" r="92" fill="#FFFFFF" stroke="#2E7D32" stroke-width="6" />
+  <circle cx="100" cy="100" r="82" fill="#F1F8E9" stroke="#81C784" stroke-width="2" />
+  
+  <!-- Rising Sun of Natural Agriculture -->
+  <path d="M45 105 A55 55 0 0 1 155 105 Z" fill="#FFA000" />
+  <!-- Sun Rays -->
+  <circle cx="100" cy="105" r="30" fill="#FFD54F" />
+
+  <!-- Green Earth / Field Furrows -->
+  <path d="M25 105 Q100 135 175 105 L170 145 Q100 175 30 145 Z" fill="#2E7D32" />
+  <path d="M35 125 Q100 155 165 125" fill="none" stroke="#81C784" stroke-width="3" />
+  <path d="M50 142 Q100 168 150 142" fill="none" stroke="#C8E6C9" stroke-width="2.5" />
+
+  <!-- Wheat / Rice Paddy Ear on left -->
+  <path d="M30 65 Q45 80 55 105" stroke="#33691E" stroke-width="3" fill="none" />
+  <circle cx="34" cy="62" r="5" fill="#8BC34A" />
+  <circle cx="42" cy="72" r="5" fill="#8BC34A" />
+  <circle cx="48" cy="85" r="5" fill="#8BC34A" />
+
+  <!-- Text: प्राकृतिक खेती -->
+  <text x="100" y="172" fill="#1B5E20" font-family="'Noto Sans Devanagari', 'Arial', sans-serif" font-size="14" font-weight="bold" text-anchor="middle">प्राकृतिक खेती</text>
+</svg>

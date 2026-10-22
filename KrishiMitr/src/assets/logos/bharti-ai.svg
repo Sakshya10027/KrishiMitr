@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100%" height="100%">
+  <!-- Circular container -->
+  <circle cx="50" cy="50" r="48" fill="#E8F5E9" stroke="#018840" stroke-width="3" />
+  
+  <!-- Indian Woman Agriculture Expert / Krishi Mitra -->
+  <!-- Green Dupatta / Headscarf -->
+  <path d="M22 65 C20 40, 30 20, 50 20 C70 20, 80 40, 78 65 C70 60, 60 70, 50 70 C40 70, 30 60, 22 65 Z" fill="#2E7D32" />
+  
+  <!-- Face -->
+  <ellipse cx="50" cy="45" rx="16" ry="19" fill="#F5CBA7" />
+  
+  <!-- Hair framing face -->
+  <path d="M36 40 C38 30, 45 28, 50 28 C55 28, 62 30, 64 40 C60 36, 40 36, 36 40 Z" fill="#2C1D11" />
+  
+  <!-- Bindi -->
+  <circle cx="50" cy="38" r="1.5" fill="#C62828" />
+
+  <!-- Eyes and Smile -->
+  <ellipse cx="43" cy="44" rx="2" ry="1.5" fill="#2C1D11" />
+  <ellipse cx="57" cy="44" rx="2" ry="1.5" fill="#2C1D11" />
+  <path d="M45 52 Q50 56 55 52" stroke="#B71C1C" stroke-width="1.5" fill="none" stroke-linecap="round" />
+
+  <!-- Headset / Microphone for AI Assistant -->
+  <path d="M34 40 C32 30, 68 30, 66 40" stroke="#37474F" stroke-width="2.5" fill="none" />
+  <rect x="31" y="38" width="5" height="9" rx="2" fill="#263238" />
+  <path d="M33 46 Q35 56 44 56" stroke="#37474F" stroke-width="2" fill="none" />
+  <circle cx="45" cy="56" r="2.5" fill="#00E676" />
+
+  <!-- Kurta / Shoulders -->
+  <path d="M25 80 C25 66, 75 66, 75 80 L75 92 C65 96, 35 96, 25 92 Z" fill="#E65100" />
+  <path d="M40 72 L50 84 L60 72" fill="#FFE082" />
+</svg>
