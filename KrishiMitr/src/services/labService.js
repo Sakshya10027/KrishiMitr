@@ -1,6 +1,7 @@
 // Soil Testing Laboratory (STL) Directory Service
 // Comprehensive National Registry covering all 28 States & 8 Union Territories of India
 // In alignment with Department of Agriculture & Farmers Welfare, Ministry of Agriculture & Farmers Welfare, GoI
+import apiClient from './apiClient';
 
 export const STATES_AND_DISTRICTS = {
   'Andaman and Nicobar Islands': ['Nicobar', 'North and Middle Andaman', 'South Andaman'],
@@ -809,4 +810,37 @@ export function getLabsByLocation({ state = '', district = '', labType = '', sea
   }
 
   return results;
+}
+
+export async function fetchLabs({ state = '', district = '', labType = '', searchTerm = '' } = {}) {
+  try {
+    const params = {};
+    if (state) params.state = state;
+    if (district) params.district = district;
+    if (labType && labType !== 'All') params.type = labType;
+    if (searchTerm) params.search = searchTerm;
+
+    const res = await apiClient.get('/labs', { params });
+    if (res && res.success && res.data && res.data.length > 0) {
+      return res.data.map(l => ({
+        id: l.id,
+        name: l.name,
+        state: l.state?.name || l.state,
+        district: l.district?.name || l.district,
+        address: l.address,
+        postalCode: l.postalCode,
+        phone: l.phone,
+        email: l.email,
+        type: l.laboratoryType,
+        inCharge: l.inCharge || 'District Agriculture Officer',
+        workingHours: l.operatingHours || '9:30 AM - 5:30 PM (Mon-Fri)',
+        testCapabilities: l.supportedParameters ? l.supportedParameters.split(',') : ['All 12 Parameters'],
+        annualCapacity: l.sampleCapacity ? `${l.sampleCapacity.toLocaleString('en-IN')} samples/year` : 'Verified Capacity',
+        accredited: l.accreditationStatus === 'ACCREDITED'
+      }));
+    }
+  } catch (err) {
+    console.debug('Backend /labs unreachable, using local curated directory:', err.message);
+  }
+  return getLabsByLocation({ state, district, labType, searchTerm });
 }

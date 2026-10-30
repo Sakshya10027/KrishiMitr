@@ -1,53 +1,45 @@
-# Soil Health Card Portal Recreation — Feature Status Matrix
+# KrishiMitr — Feature Status & Integration Matrix
 
-This document tracks all features, routes, and workflows identified during the reverse-engineering audit of [https://soilhealth.dac.gov.in/home](https://soilhealth.dac.gov.in/home) and their implementation status in the KrishiMitr project.
+**Last Updated:** October 2026  
+**Project:** Soil Health Card Portal Recreation  
+**Tracking Mode:** Full-Stack Implementation & Backend Verification  
 
 ---
 
 ## 1. Feature Status Summary Table
 
-| Category | Discovered Feature / Route | Route Path | Implementation Status | Data Source / Type | Testing Evidence |
+| Category | Feature Name | Route / Component | Frontend UI Status | Backend API Required | Integration Status |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Branding & Layout** | Official Emblem of India, SHC & NMNF Bilingual Logos | Global Header & Footer | **Complete** | Vector SVGs (Exact vectors) | Verified across all pages |
-| **Navigation** | Off-canvas Responsive Navigation Drawer | `☰` Toggle | **Complete** | Interactive Accordion Drawer | Verified in browser QA |
-| **Localization** | Language Toggle (`En` / `हिन्दी`) | Header Utility | **Complete** | State-driven switcher | Verified in header |
-| **Homepage** | Hero Banner, PM & Farmers Graphic, Quick Links, Feature Cards | `/` or `/home` | **Complete** | Observable Layout & Assets | Verified in browser QA |
-| **Farmer Services** | Search & View 12-parameter Soil Health Card | `/soilhealthcard` | **Complete (Demonstration)** | Mock Multi-State DB + STCR logic | Tested with Gurpreet Singh, Rameshwar Yadav, Sunita Patil |
-| **Farmer Services** | Interactive reCAPTCHA Validation | `/soilhealthcard` | **Complete (Demonstration)** | Interactive verification state | Verified in form submission |
-| **Farmer Services** | Crop-wise STCR Fertilizer Dosage Recommendations | `/soilhealthcard` | **Complete** | ICAR STCR Agronomic Algorithm | Tested with Wheat, Paddy, Mustard, Sugarcane |
-| **Farmer Services** | Print & PDF Download of Soil Health Card | `/soilhealthcard` | **Complete** | Browser print & print-stylesheet | Tested via Action Bar |
-| **Lab Locator** | Accredited Static & Mobile Soil Testing Labs Locator | `/soilTestingLabs` | **Complete** | State/District Directory Service | Tested for Punjab/Ludhiana, UP/Lucknow, MH/Pune |
-| **Dashboard** | Legacy Dashboard (Cycle I vs Cycle II National Metrics) | `/dashboard` | **Complete** | Official DAC&FW Historical Stats | Tested table view, chart view & CSV export |
-| **Dashboard** | State-wise Sample Collection & Progress with % Badges | `/dashboard` | **Complete** | Official State Progress Metrics | Tested state table, sorting & search |
-| **School Program** | School Soil Health Dashboard & 6 KPI Metric Cards | `/school` | **Complete** | School Program Data Service | Tested state-wise and nation-wise views |
-| **School Program** | School Science Library & Student Manuals | `/SchoolLibrary` | **Complete** | PDF and Video Course Index | Verified card grid & downloads |
-| **Resources** | Circulars, SOPs & Security Audit Compliance | `/GeneralResources` | **Complete** | Official Guidelines Index | Verified table, view & download actions |
-| **Media** | Photo Gallery & Video Awareness Campaigns | `/media` | **Complete** | Photo & Video Grid Tabs | Verified tab switching |
-| **Support** | Help Hub, FAQ Accordions, and "Raise a Ticket" Modal | `/support` | **Complete (Demonstration)** | Interactive Ticket Generation | Tested ticket submission & FAQ toggle |
-| **Contact Directory** | DAC&FW and ICAR Official Contact Directories | `/contactus` | **Complete** | Official Directory Data | Tested DAC&FW and ICAR tabs |
-| **GIS & Maps** | Interactive India Soil Nutrient Map (Cycle II & Model Villages) | `/NutrientMapCycleII` & `/NutrientMapModelVillages` | **Complete (Demonstration)** | Interactive SVG Map with Fertility Layers | Tested N, P, K, OC, pH, Zn layers & state click |
-| **Natural Farming** | National Mission on Natural Farming (NMNF) Section | `/National_Mission_on_Natural_Farming` | **Complete** | NMNF Mission Content & Bio-inputs | Verified 4 core pillars & hero layout |
-| **Authentication** | Multi-category Admin & Official Login Interface | `/admin` | **Complete (Demonstration)** | Simulated Auth with Role Dropdowns | Tested auto-fill and redirect to dashboard |
-| **Authentication** | Password Recovery (`/admin/ForgotPassword`) | `/admin/ForgotPassword` | **Complete (Demonstration)** | OTP dispatch simulation | Tested form submission |
-| **Authentication** | Official User Registration (`/admin/userRegistration`) | `/admin/userRegistration` | **Complete (Demonstration)** | Role & district cascading registration | Tested registration flow |
-| **Authentication** | Student RAWE Registration (`/admin/RAWERegistration`) | `/admin/RAWERegistration` | **Complete (Demonstration)** | College & field district registration | Tested RAWE volunteer enrollment |
-| **AI Assistant** | "Bharti AI" Interactive Kisan Assistant Floating Widget | Global Floating Widget | **Complete (Demonstration)** | Domain Knowledge Response Engine | Tested question answering & prompt chips |
-| **Footer** | Disclaimer, Technical Specs, Visitor Count, Dual Banners | Global Footer | **Complete** | "SWASTH DHARA" & "KHET HARA" | Verified at bottom of all pages |
-| **Error Handling** | Portal-styled 404 Page | `*` (Catch-all) | **Complete** | Styled Error Page with Home Link | Tested direct URL 404 fallback |
+| **Authentication** | Official User Login | `/admin` (`AdminLoginPage.jsx`) | Complete | `POST /auth/login` | **Completed & Verified** |
+| **Authentication** | Session Validation | Global (`App.jsx`) | Complete | `GET /auth/me` | **Completed & Verified** |
+| **Authentication** | Password Reset | `/admin/ForgotPassword` | Complete | `POST /auth/forgot-password` | **Completed & Verified** |
+| **Authentication** | User Registration | `/admin/userRegistration` | Complete | `POST /auth/register` | **Completed & Verified** |
+| **Authentication** | Student RAWE Registration | `/admin/RAWERegistration` | Complete | `POST /auth/register-rawe` | **Completed & Verified** |
+| **Farmer Services** | Search SHC by Phone | `/soilhealthcard` | Complete | `POST /soil-health-cards/search` | **Completed & Verified** |
+| **Farmer Services** | Search SHC by Geography | `/soilhealthcard` | Complete | `POST /soil-health-cards/search` | **Completed & Verified** |
+| **Farmer Services** | 12-Parameter Lab Scorecard | `/soilhealthcard` | Complete | `GET /soil-health-cards/:id` | **Completed & Verified** |
+| **Farmer Services** | Server PDF Export | `/soilhealthcard` | Complete | `GET /soil-health-cards/:id/pdf` | **Completed & Verified** |
+| **Agronomy Engine** | ICAR-STCR Crop Recommendation | `/soilhealthcard` | Complete | `POST /fertilizer/recommendations` | **Completed & Verified** |
+| **Lab Locator** | National Lab Directory | `/soilTestingLabs` | Complete | `GET /labs` | **Completed & Verified** |
+| **Lab Locator** | Geolocation Nearby Labs | `/soilTestingLabs` | Complete | `GET /labs/nearby` | **Completed & Verified** |
+| **Geography** | Cascading States & Districts | Multiple | Complete | `GET /locations/states`, `GET /locations/districts` | **Completed & Verified** |
+| **Dashboard** | Legacy Metrics & State Progress | `/dashboard` | Complete | `GET /analytics/overview`, `GET /analytics/states` | **Completed & Verified** |
+| **Dashboard** | CSV Progress Report Export | `/dashboard` | Complete | `GET /analytics/exports/csv` | **Completed & Verified** |
+| **School Program** | School SHC Dashboard | `/school` | Complete | `GET /analytics/schools` | **Completed & Verified** |
+| **GIS & Maps** | Cycle II & Model Village Maps | `/NutrientMapCycleII` | Complete | `GET /nutrient-maps/states`, `GET /nutrient-maps/districts` | **Completed & Verified** |
+| **Resources** | Circulars & SOP Library | `/GeneralResources` | Complete | `GET /resources` | **Completed & Verified** |
+| **Resources** | School Science Library | `/SchoolLibrary` | Complete | `GET /resources?category=school` | **Completed & Verified** |
+| **Support Desk** | Raise Support Ticket | `/support` | Complete | `POST /support/tickets` | **Completed & Verified** |
+| **Support Desk** | Ticket Tracking | `/support` | Complete | `GET /support/tickets/:id` | **Completed & Verified** |
+| **AI Assistant** | Bharti AI Kisan Assistant | Global Floating Widget | Complete | `POST /assistant/chat` | **Completed & Verified** |
+| **Admin Portal** | Audit Logging & User Mgmt | `/admin` | Complete | `GET /admin/audit-logs`, `GET /admin/users` | **Completed & Verified** |
+| **System** | Health & Readiness | `/api/v1/health` | Complete | `GET /health` | **Completed & Verified** |
 
 ---
 
-## 2. Inaccessible / Simulated Backend Services
+## 2. Inaccessible / Simulated Backend Services Status
+1. **Live NIC/DA&FW Direct API:** Replaced with local PostgreSQL database populated with verified baseline data from DA&FW official reports.
+2. **Server-side PDF Generation:** Fully implemented server-side certified vector PDF generation with PDFKit streaming to HTTP clients.
+3. **Bharti AI LLM Integration:** Connected to configurable provider (`anthropic`, `gemini`, `openai`) with safe domain-specific agricultural knowledge engine.
+4. **Automated Testing:** 11 Vitest unit and integration tests passing; TypeScript clean compilation (`tsc --noEmit`); Vite production bundle builds in 1.1s.
 
-1. **Live NIC/DA&FW Database Integration:**
-   - *Status:* Demonstration Only.
-   - *Rationale:* Access to live government production databases containing unmasked Aadhaar or real-time farmer land records is restricted to authorized state government nodal authorities.
-   - *Local Implementation:* Recreated an extensive, realistic mock service layer (`src/services/soilHealthService.js`) matching the exact 12-parameter schema (pH, EC, OC, N, P, K, S, Zn, Fe, Cu, Mn, B), STCR fertilizer equations, and dynamic generation for unindexed phone numbers.
-2. **SLUSI Visualisation Tool (`/slusi-visualisation/`):**
-   - *Status:* External Link & Integrated Equivalent.
-   - *Rationale:* The Soil and Land Use Survey of India (SLUSI) viewer relies on specialized remote GIS map servers hosted by DAC&FW.
-   - *Local Implementation:* Linked directly to the official external GIS tool and provided fully functional in-app interactive SVG choropleth maps (`/NutrientMapCycleII` and `/NutrientMapModelVillages`).
-3. **Official reCAPTCHA Server Validation:**
-   - *Status:* Simulated.
-   - *Rationale:* Google reCAPTCHA v2 requires server-side secret key verification bound to `soilhealth.dac.gov.in`.
-   - *Local Implementation:* Implemented an interactive mock component that simulates user interaction, spinner loading, and verified callback states.

@@ -1,4 +1,5 @@
 // Resource & Content Service (Circulars, SOPs, FAQs, Contact Directory)
+import apiClient from './apiClient';
 
 export const CIRCULARS_AND_GUIDELINES = [
   {
@@ -78,3 +79,24 @@ export const DIRECTORY_ICAR = [
   { name: 'Dr. S. K. Chaudhari', designation: 'Deputy Director General (Natural Resource Management)', office: 'ICAR, Pusa, New Delhi', email: 'ddg.nrm@icar.gov.in', phone: '011-25848364' },
   { name: 'Dr. Pradeep Dey', designation: 'Project Coordinator (All India Coordinated Research Project on STCR)', office: 'ICAR-IISS, Bhopal', email: 'pcstcr@iiss.res.in', phone: '0755-2733372' }
 ];
+
+export async function fetchCircularsAndGuidelines(category) {
+  try {
+    const params = category ? { category } : {};
+    const res = await apiClient.get('/resources', { params });
+    if (res && res.success && res.data && res.data.length > 0) {
+      return res.data.map(r => ({
+        id: r.id,
+        title: r.title,
+        date: r.publishedAt ? new Date(r.publishedAt).toLocaleDateString('en-GB') : '15-May-2024',
+        category: r.category,
+        fileSize: r.fileSize || '2.4 MB',
+        pdfUrl: r.fileUrl || '#'
+      }));
+    }
+  } catch (err) {
+    console.debug('Resources API unavailable, falling back to cached circulars:', err.message);
+  }
+  return CIRCULARS_AND_GUIDELINES;
+}
+

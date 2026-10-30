@@ -36,15 +36,15 @@ export default function SoilHealthCardSearch({ onSelectCard }) {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!isFormValid()) return;
 
     setIsSubmitting(true);
     setErrorMessage('');
 
-    setTimeout(() => {
-      const results = searchSoilHealthCard({
+    try {
+      const results = await searchSoilHealthCard({
         queryType: searchBy,
         phoneNumber,
         farmerName,
@@ -60,28 +60,28 @@ export default function SoilHealthCardSearch({ onSelectCard }) {
       } else {
         setErrorMessage('No Soil Health Card found for the provided details. Please verify the mobile number or try one of the demo records.');
       }
-    }, 500);
+    } catch {
+      setIsSubmitting(false);
+      setErrorMessage('An unexpected error occurred while querying records. Please try again.');
+    }
   };
 
-  const handleQuickDemo = (demoType) => {
-    if (demoType === 'punjab') {
-      setSearchBy('phone');
-      setPhoneNumber('9876543210');
-      setCaptchaVerified(true);
-      const results = searchSoilHealthCard({ queryType: 'phone', phoneNumber: '9876543210' });
-      if (results.length > 0) onSelectCard(results[0]);
-    } else if (demoType === 'up') {
-      setSearchBy('phone');
-      setPhoneNumber('9415012345');
-      setCaptchaVerified(true);
-      const results = searchSoilHealthCard({ queryType: 'phone', phoneNumber: '9415012345' });
-      if (results.length > 0) onSelectCard(results[0]);
-    } else if (demoType === 'mh') {
-      setSearchBy('phone');
-      setPhoneNumber('9822019921');
-      setCaptchaVerified(true);
-      const results = searchSoilHealthCard({ queryType: 'phone', phoneNumber: '9822019921' });
-      if (results.length > 0) onSelectCard(results[0]);
+  const handleQuickDemo = async (demoType) => {
+    setIsSubmitting(true);
+    let targetPhone = '9876543210';
+    if (demoType === 'up') targetPhone = '9415012345';
+    if (demoType === 'mh') targetPhone = '9822019921';
+
+    setSearchBy('phone');
+    setPhoneNumber(targetPhone);
+    setCaptchaVerified(true);
+    
+    try {
+      const results = await searchSoilHealthCard({ queryType: 'phone', phoneNumber: targetPhone });
+      setIsSubmitting(false);
+      if (results && results.length > 0) onSelectCard(results[0]);
+    } catch {
+      setIsSubmitting(false);
     }
   };
 

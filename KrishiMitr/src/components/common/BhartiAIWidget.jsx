@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
 import { X, Send, Bot, MessageSquare, Sparkles } from 'lucide-react';
 import bhartiAvatar from '../../assets/logos/bharti-ai.svg';
+import apiClient from '../../services/apiClient';
 
 export default function BhartiAIWidget() {
   const [isOpen, setIsOpen] = useState(false);
+  const [conversationId, setConversationId] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
   const [messages, setMessages] = useState([
     {
       sender: 'ai',
@@ -19,15 +22,35 @@ export default function BhartiAIWidget() {
     'How do I find a nearby Soil Testing Lab?'
   ];
 
-  const handleSend = (userText) => {
+  const handleSend = async (userText) => {
     const textToSend = userText || inputVal;
     if (!textToSend.trim()) return;
 
     const newMsgs = [...messages, { sender: 'user', text: textToSend }];
     setMessages(newMsgs);
     setInputVal('');
+    setIsLoading(true);
 
-    // Generate responsive response
+    // 1. Try real backend AI assistant endpoint
+    try {
+      const response = await apiClient.post('/assistant/chat', {
+        message: textToSend,
+        conversationId
+      });
+
+      if (response && response.success && response.data) {
+        if (response.data.conversationId) {
+          setConversationId(response.data.conversationId);
+        }
+        setMessages(prev => [...prev, { sender: 'ai', text: response.data.answer }]);
+        setIsLoading(false);
+        return;
+      }
+    } catch {
+      // Backend offline or AI provider unavailable -> use domain-knowledge fallback
+    }
+
+    // 2. Intelligent offline fallback
     setTimeout(() => {
       let reply = 'Thank you for your question. Under the Soil Health Card Scheme, regular 3-year soil testing ensures optimal fertilizer usage and cost efficiency.';
       const lower = textToSend.toLowerCase();
@@ -45,7 +68,8 @@ export default function BhartiAIWidget() {
       }
 
       setMessages(prev => [...prev, { sender: 'ai', text: reply }]);
-    }, 600);
+      setIsLoading(false);
+    }, 400);
   };
 
   return (

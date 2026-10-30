@@ -1,0 +1,364 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum Role {
+  FARMER
+  ADMIN
+  STATE_ADMIN
+  DISTRICT_ADMIN
+  LAB_OPERATOR
+  SCHOOL_ADMIN
+  RAWE_STUDENT
+}
+
+enum LaboratoryType {
+  DISTRICT_STATIC
+  MOBILE_VAN
+  ICAR_KVK
+  UNIVERSITY_RESEARCH
+}
+
+enum CardStatus {
+  DRAFT
+  SAMPLE_COLLECTED
+  TESTING
+  COMPLETED
+  ISSUED
+}
+
+enum ResourceCategory {
+  SOP
+  CIRCULAR
+  TECHNICAL
+  COMPLIANCE
+  SCHOOL
+  MEDIA
+}
+
+enum TicketStatus {
+  OPEN
+  IN_PROGRESS
+  RESOLVED
+  CLOSED
+}
+
+enum TicketPriority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+model User {
+  id                String    @id @default(uuid())
+  fullName          String
+  email             String?   @unique
+  phone             String?   @unique
+  passwordHash      String
+  preferredLanguage String    @default("en")
+  role              Role      @default(FARMER)
+  stateId           String?
+  districtId        String?
+  isActive          Boolean   @default(true)
+  lastLoginAt       DateTime?
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  state             State?    @relation(fields: [stateId], references: [id])
+  district          District? @relation(fields: [districtId], references: [id])
+
+  cards             SoilHealthCard[]
+  tickets           SupportTicket[]
+  conversations     AssistantConversation[]
+  auditLogs         AuditLog[]
+
+  @@index([email])
+  @@index([phone])
+  @@index([role])
+}
+
+model State {
+  id        String     @id
+  code      String     @unique
+  name      String     @unique
+  type      String     @default("STATE") // STATE or UT
+
+  districts District[]
+  users     User[]
+  labs      Laboratory[]
+  cards     SoilHealthCard[]
+
+  @@index([name])
+}
+
+model District {
+  id           String        @id
+  stateId      String
+  code         String
+  name         String
+
+  state        State         @relation(fields: [stateId], references: [id], onDelete: Cascade)
+  subDistricts SubDistrict[]
+  users        User[]
+  labs         Laboratory[]
+  cards        SoilHealthCard[]
+
+  @@unique([stateId, name])
+  @@index([name])
+}
+
+model SubDistrict {
+  id         String     @id
+  districtId String
+  name       String
+
+  district   District   @relation(fields: [districtId], references: [id], onDelete: Cascade)
+  villages   Village[]
+  cards      SoilHealthCard[]
+
+  @@unique([districtId, name])
+  @@index([name])
+}
+
+model Village {
+  id            String      @id
+  subDistrictId String
+  name          String
+  pincode       String?
+
+  subDistrict   SubDistrict @relation(fields: [subDistrictId], references: [id], onDelete: Cascade)
+  cards         SoilHealthCard[]
+
+  @@index([name])
+}
+
+model Laboratory {
+  id                   String         @id @default(uuid())
+  name                 String
+  laboratoryType       LaboratoryType @default(DISTRICT_STATIC)
+  stateId              String
+  districtId           String
+  address              String
+  postalCode           String?
+  latitude             Float?
+  longitude            Float?
+  phone                String?
+  email                String?
+  operatingHours       String?
+  accreditationStatus  String?        @default("State Certified")
+  accreditationDetails String?
+  supportedParameters  String?        @default("12 Parameters (NPK, OC, pH, Micronutrients)")
+  sampleCapacity       Int?           @default(5000)
+  isActive             Boolean        @default(true)
+  sourceUrl            String?
+  lastVerifiedAt       DateTime?      @default(now())
+  createdAt            DateTime       @default(now())
+  updatedAt            DateTime       @updatedAt
+
+  state                State          @relation(fields: [stateId], references: [id])
+  district             District       @relation(fields: [districtId], references: [id])
+  testedCards          SoilHealthCard[]
+
+  @@index([stateId, districtId])
+  @@index([laboratoryType])
+  @@index([isActive])
+}
+
+model SoilHealthCard {
+  id                String               @id @default(uuid())
+  cardNumber        String               @unique
+  sampleNumber      String               @unique
+  farmerName        String
+  farmerPhone       String?
+  farmerUserId      String?
+  stateId           String
+  districtId        String
+  subDistrictId     String?
+  villageId         String?
+  khataNo           String?
+  khasraNo          String?
+  farmSizeHa        Float?               @default(1.0)
+  irrigationSource  String?              @default("Canal & Tubewell")
+  soilType          String?              @default("Alluvial Loam")
+  laboratoryId      String?
+  collectionDate    DateTime?
+  testingDate       DateTime?
+  issueDate         DateTime?
+  cropSeason        String?              @default("Rabi 2025-26")
+  status            CardStatus           @default(ISSUED)
+  createdAt         DateTime             @default(now())
+  updatedAt         DateTime             @updatedAt
+
+  farmer            User?                @relation(fields: [farmerUserId], references: [id])
+  state             State                @relation(fields: [stateId], references: [id])
+  district          District             @relation(fields: [districtId], references: [id])
+  subDistrict       SubDistrict?         @relation(fields: [subDistrictId], references: [id])
+  village           Village?             @relation(fields: [villageId], references: [id])
+  laboratory        Laboratory?          @relation(fields: [laboratoryId], references: [id])
+
+  testResult        SoilTestResult?
+  recommendations   CropRecommendation[]
+
+  @@index([farmerPhone])
+  @@index([stateId, districtId])
+  @@index([cardNumber])
+  @@index([sampleNumber])
+}
+
+model SoilTestResult {
+  id            String         @id @default(uuid())
+  cardId        String         @unique
+
+  // 12 Parameters
+  pH            Float          // Soil Reaction
+  pH_rating     String         @default("Neutral")
+  EC            Float          // Electrical Conductivity (dS/m)
+  EC_rating     String         @default("Normal")
+  OC            Float          // Organic Carbon (%)
+  OC_rating     String         @default("Medium")
+  N             Float          // Available Nitrogen (kg/ha)
+  N_rating      String         @default("Low")
+  P             Float          // Available Phosphorus (kg/ha)
+  P_rating      String         @default("Medium")
+  K             Float          // Available Potassium (kg/ha)
+  K_rating      String         @default("High")
+  S             Float          // Available Sulphur (ppm)
+  S_rating      String         @default("Sufficient")
+  Zn            Float          // Available Zinc (ppm)
+  Zn_rating     String         @default("Sufficient")
+  Fe            Float          // Available Iron (ppm)
+  Fe_rating     String         @default("Sufficient")
+  Cu            Float          // Available Copper (ppm)
+  Cu_rating     String         @default("Sufficient")
+  Mn            Float          // Available Manganese (ppm)
+  Mn_rating     String         @default("Sufficient")
+  B             Float          // Available Boron (ppm)
+  B_rating      String         @default("Sufficient")
+
+  testingMethod String?        @default("ICAR-IISS Standard Wet Chemistry Protocol")
+  analystName   String?        @default("Dr. Authorized Analyst")
+  testedAt      DateTime?      @default(now())
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+
+  card          SoilHealthCard @relation(fields: [cardId], references: [id], onDelete: Cascade)
+}
+
+model CropRecommendation {
+  id             String         @id @default(uuid())
+  cardId         String
+  cropName       String
+  yieldTarget    String
+  fertilizers    Json           // Array of { name, basal, topDressing1, topDressing2, total }
+  organicInputs  String?
+
+  card           SoilHealthCard @relation(fields: [cardId], references: [id], onDelete: Cascade)
+
+  @@index([cardId])
+}
+
+model Resource {
+  id              String           @id @default(uuid())
+  title           String
+  description     String?
+  category        ResourceCategory @default(CIRCULAR)
+  language        String           @default("English")
+  fileUrl         String
+  fileSize        String?
+  publicationDate DateTime         @default(now())
+  isActive        Boolean          @default(true)
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+
+  @@index([category])
+  @@index([isActive])
+}
+
+model SupportTicket {
+  id           String         @id @default(uuid())
+  ticketNumber String         @unique // e.g. TKT-182910
+  userId       String?
+  farmerName   String
+  phone        String
+  category     String
+  description  String
+  status       TicketStatus   @default(OPEN)
+  priority     TicketPriority @default(MEDIUM)
+  resolvedAt   DateTime?
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+
+  user         User?          @relation(fields: [userId], references: [id])
+  comments     TicketComment[]
+
+  @@index([ticketNumber])
+  @@index([phone])
+  @@index([status])
+}
+
+model TicketComment {
+  id         String        @id @default(uuid())
+  ticketId   String
+  authorId   String?
+  authorName String        @default("Support Officer")
+  message    String
+  isInternal Boolean       @default(false)
+  createdAt  DateTime      @default(now())
+
+  ticket     SupportTicket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+
+  @@index([ticketId])
+}
+
+model AssistantConversation {
+  id           String             @id @default(uuid())
+  userId       String?
+  sessionToken String?
+  title        String?            @default("Soil Health Consultation")
+  createdAt    DateTime           @default(now())
+  updatedAt    DateTime           @updatedAt
+
+  user         User?              @relation(fields: [userId], references: [id])
+  messages     AssistantMessage[]
+
+  @@index([userId])
+  @@index([sessionToken])
+}
+
+model AssistantMessage {
+  id             String                @id @default(uuid())
+  conversationId String
+  sender         String                // "USER" or "ASSISTANT"
+  message        String
+  language       String                @default("en")
+  citations      Json?
+  createdAt      DateTime              @default(now())
+
+  conversation   AssistantConversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+  @@index([conversationId])
+}
+
+model AuditLog {
+  id         String   @id @default(uuid())
+  actorId    String?
+  actorRole  String?
+  action     String   // e.g. "SHC_ISSUED", "LAB_UPDATED", "USER_ROLE_CHANGED"
+  entityType String   // e.g. "SoilHealthCard", "Laboratory", "User"
+  entityId   String?
+  metadata   Json?
+  ipAddress  String?
+  createdAt  DateTime @default(now())
+
+  actor      User?    @relation(fields: [actorId], references: [id])
+
+  @@index([actorId])
+  @@index([action])
+  @@index([entityType])
+}

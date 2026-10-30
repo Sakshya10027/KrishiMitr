@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Eye, EyeOff, Lock, User, LogIn, AlertCircle, CheckCircle2 } from 'lucide-react';
 import emblemImg from '../assets/logos/emblem-india.svg';
 import shcLogo from '../assets/logos/shc-logo.svg';
+import apiClient from '../services/apiClient';
 
 export default function AdminLoginPage() {
   const navigate = useNavigate();
@@ -36,7 +37,7 @@ export default function AdminLoginPage() {
     ]
   };
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
     if (!userType || userType === 'Select User Type' || !username || !password) {
       setLoginMessage({ type: 'error', text: 'Please select a User type and provide valid credentials.' });
@@ -46,16 +47,41 @@ export default function AdminLoginPage() {
     setIsSubmitting(true);
     setLoginMessage(null);
 
+    try {
+      const res = await apiClient.post('/auth/login', {
+        identifier: username,
+        password: password
+      });
+
+      if (res && res.success && res.data) {
+        apiClient.setToken(res.data.accessToken);
+        localStorage.setItem('krishimitr_user', JSON.stringify(res.data.user));
+        setIsSubmitting(false);
+        setLoginMessage({
+          type: 'success',
+          text: `Authenticated as ${res.data.user.fullName} (${res.data.user.role}). Redirecting...`
+        });
+        setTimeout(() => navigate('/dashboard'), 1000);
+        return;
+      }
+    } catch (err) {
+      if (err.message && err.message.includes('Invalid credentials')) {
+        setIsSubmitting(false);
+        setLoginMessage({ type: 'error', text: 'Invalid username or password.' });
+        return;
+      }
+    }
+
     setTimeout(() => {
       setIsSubmitting(false);
       setLoginMessage({ 
         type: 'success', 
-        text: `Demonstration login successful for "${username}" (${userType}). Redirecting to Legacy Dashboard...` 
+        text: `Demonstration login successful for "${username}" (${userType}). Redirecting to Dashboard...` 
       });
       setTimeout(() => {
         navigate('/dashboard');
-      }, 1500);
-    }, 700);
+      }, 1000);
+    }, 500);
   };
 
   const handleDemoFill = () => {

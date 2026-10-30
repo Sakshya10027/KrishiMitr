@@ -2,13 +2,18 @@ import React from 'react';
 import { Printer, Download, ArrowLeft, CheckCircle2, AlertTriangle, AlertCircle } from 'lucide-react';
 import emblemImg from '../../assets/logos/emblem-india.svg';
 import shcLogo from '../../assets/logos/shc-logo.svg';
-import { PARAMETER_STANDARDS } from '../../services/soilHealthService';
+import { PARAMETER_STANDARDS, downloadSoilHealthCardPDF } from '../../services/soilHealthService';
 
 export default function SoilHealthCardView({ cardData, onBack }) {
   if (!cardData) return null;
 
   const handlePrint = () => {
     window.print();
+  };
+
+  const handleDownload = async () => {
+    const cardId = cardData.id || cardData.shcNumber;
+    await downloadSoilHealthCardPDF(cardId, `${cardData.shcNumber.replace(/[\/\\]/g, '_')}.pdf`);
   };
 
   const getStatusBadge = (rating) => {
@@ -35,7 +40,7 @@ export default function SoilHealthCardView({ cardData, onBack }) {
             <Printer size={16} />
             <span>Print Soil Health Card</span>
           </button>
-          <button type="button" className="shc-btn-secondary" onClick={handlePrint}>
+          <button type="button" className="shc-btn-secondary" onClick={handleDownload}>
             <Download size={16} />
             <span>Download PDF</span>
           </button>

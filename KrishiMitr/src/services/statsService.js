@@ -1,5 +1,6 @@
 // Dashboard and National Statistics Service
-// Real observable statistics from DAC&FW Soil Health Portal
+// Real observable statistics from DAC&FW Soil Health Portal with Backend Integration
+import apiClient from './apiClient';
 
 export const CYCLE_SUMMARY = {
   cycle1: {
@@ -63,3 +64,46 @@ export const SCHOOL_DASHBOARD_METRICS = {
   samplesCollected: '22,771',
   shcGenerated: '7,500'
 };
+
+export async function fetchOverviewStats() {
+  try {
+    const res = await apiClient.get('/analytics/overview');
+    if (res && res.success && res.data && res.data.cycles) {
+      return res.data;
+    }
+  } catch (err) {
+    console.debug('Analytics API unavailable, fallback to cached cycle metrics:', err.message);
+  }
+  return { cycles: CYCLE_SUMMARY, liveDatabaseMetrics: { registeredCards: 0, activeLaboratories: 0 } };
+}
+
+export async function fetchStateProgressStats() {
+  try {
+    const res = await apiClient.get('/analytics/states');
+    if (res && res.success && res.data && res.data.length > 0) {
+      return res.data;
+    }
+  } catch (err) {
+    console.debug('State progress API unavailable, fallback to baseline dataset:', err.message);
+  }
+  return STATE_PROGRESS;
+}
+
+export async function downloadAnalyticsCSV(cycle = 'cycle2', fileName = 'KrishiMitr_State_Progress.csv') {
+  try {
+    const blob = await apiClient.getBlob(`/analytics/exports/csv?cycle=${cycle}`);
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = fileName;
+    document.body.appendChild(a);
+    a.click();
+    window.URL.revokeObjectURL(url);
+    document.body.removeChild(a);
+    return true;
+  } catch (err) {
+    console.error('Failed to download backend CSV:', err);
+    return false;
+  }
+}
+

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Breadcrumb from '../components/common/Breadcrumb';
-import { STATES_AND_DISTRICTS, MOCK_LABS, getLabsByLocation } from '../services/labService';
+import { STATES_AND_DISTRICTS, MOCK_LABS, getLabsByLocation, fetchLabs } from '../services/labService';
 import { 
   MapPin, Phone, Mail, Award, CheckCircle, Search, 
   RotateCcw, Building2, Truck, FlaskConical, Clock, 
@@ -16,8 +16,8 @@ export default function SoilTestingLabsPage() {
 
   const availableDistricts = selectedState ? (STATES_AND_DISTRICTS[selectedState] || []) : [];
 
-  const performSearch = (stateVal, districtVal, typeVal, searchVal) => {
-    const filtered = getLabsByLocation({
+  const performSearch = async (stateVal, districtVal, typeVal, searchVal) => {
+    const filtered = await fetchLabs({
       state: stateVal,
       district: districtVal,
       labType: typeVal,
