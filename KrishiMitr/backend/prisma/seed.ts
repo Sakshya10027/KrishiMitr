@@ -1,5 +1,3 @@
-/// <reference types="node" />
-import process from 'node:process';
 import { PrismaClient, Role, LaboratoryType, CardStatus, ResourceCategory, TicketStatus, TicketPriority } from '@prisma/client';
 import bcrypt from 'bcryptjs';
 

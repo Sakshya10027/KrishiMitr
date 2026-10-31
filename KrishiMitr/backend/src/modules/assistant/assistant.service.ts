@@ -60,16 +60,132 @@ export class AssistantService {
     };
   }
 
+  private async callLLM(
+    message: string,
+    history: Array<{ role: 'user' | 'assistant'; content: string }> = [],
+    language = 'en'
+  ): Promise<{ reply: string; citations: string[] }> {
+    const provider = env.AI_PROVIDER;
+    const apiKey = env.AI_API_KEY;
+    if (!apiKey) {
+      throw new Error('AI API key is missing');
+    }
+
+    let baseUrl = env.AI_BASE_URL || 'https://api.groq.com/openai/v1';
+    if (provider === 'groq' || provider === 'grok') {
+      if (!baseUrl || baseUrl === '') {
+        baseUrl = 'https://api.groq.com/openai/v1';
+      }
+    }
+    baseUrl = baseUrl.replace(/\/+$/, '');
+
+    const model = env.AI_MODEL || 'openai/gpt-oss-120b';
+
+    const langMap: Record<string, string> = {
+      hi: 'Hindi (हिन्दी) in Devanagari script',
+      mr: 'Marathi (मराठी) in Devanagari script',
+      gu: 'Gujarati (ગુજરાતી) in Gujarati script',
+      te: 'Telugu (తెలుగు) in Telugu script',
+      ta: 'Tamil (தமிழ்) in Tamil script',
+      bn: 'Bengali (বাংলা) in Bengali script',
+      pa: 'Punjabi (ਪੰਜਾਬੀ) in Gurmukhi script',
+      kn: 'Kannada (ಕನ್ನಡ) in Kannada script',
+      ml: 'Malayalam (മലയാളം) in Malayalam script',
+      or: 'Odia (ଓଡ଼ିଆ) in Odia script',
+      en: 'English'
+    };
+    const targetLangName = langMap[language] || (language === 'en' ? 'English' : 'Hindi (हिन्दी) in Devanagari script');
+
+    const systemPrompt = `You are Bharti AI (भारती एआई), the official intelligent virtual assistant for KrishiMitr and the National Soil Health Card Scheme under the Ministry of Agriculture & Farmers Welfare, Government of India.
+Your mission is to guide Indian farmers, agronomists, extension officers, and citizens with warm, empathetic, practical, and scientifically sound agricultural advice.
+
+Core Domain Guidelines:
+1. Greet warmly (e.g. "Namaste Kisan Bhai / Farmer!" or "नमस्ते किसान भाई!").
+2. Core Expertise:
+   - Soil Health Card (SHC) parameters: pH, Organic Carbon (OC), Nitrogen (N), Phosphorus (P), Potassium (K), Sulphur (S), Zinc (Zn), Boron (B), Iron (Fe), Manganese (Mn), Copper (Cu).
+   - STCR (Soil Test Crop Response) precision fertilizer calculations (Urea, DAP, MOP, SSP) based on soil test results and crop targets.
+   - Natural & organic farming practices under National Mission on Natural Farming (NMNF): Jeevamrit, Beejamrit, Ghanjeevamrit, Neemastra, and crop rotation.
+   - Soil amendments: Lime/Dolomite for acidic soils (pH < 6.0), Gypsum for sodic/alkaline soils (pH > 8.5), Farm Yard Manure (FYM) and green manuring (Dhaincha/Sanai) for low organic carbon.
+   - Soil testing laboratory (STL) procedures, sample collection steps (V-shaped cut 0-15 cm), and card download process on the KrishiMitr portal.
+3. Language & Script Enforcement:
+   - The user's active regional language is: ${targetLangName}.
+   - CRITICAL REQUIREMENT: You MUST write your ENTIRE response in ${targetLangName}. Even if the farmer types or clicks their question in English, address their question and reply completely in ${targetLangName}.
+4. Tone & Format: Respectful, encouraging, well-structured with clear bullet points, practical dosages in kg/acre or kg/hectare, and easily actionable steps. Keep explanations concise and farmer-friendly.`;
+
+    const messages = [
+      { role: 'system', content: systemPrompt },
+      ...history.slice(-6),
+      { role: 'user', content: message }
+    ];
+
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 20000);
+
+    try {
+      const response = await fetch(`${baseUrl}/chat/completions`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${apiKey}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          model,
+          messages,
+          temperature: 0.6
+        }),
+        signal: controller.signal
+      });
+
+      clearTimeout(timeout);
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`API responded with ${response.status}: ${errorText}`);
+      }
+
+      const json: any = await response.json();
+      const content = json?.choices?.[0]?.message?.content;
+      if (!content || !content.trim()) {
+        throw new Error('Empty response from AI model');
+      }
+
+      return {
+        reply: content.trim(),
+        citations: [
+          'ICAR - Indian Institute of Soil Science (IISS)',
+          'Soil Health Card Scheme (DA&FW, MoA&FW)',
+          'National Mission on Natural Farming (NMNF)'
+        ]
+      };
+    } catch (err) {
+      clearTimeout(timeout);
+      throw err;
+    }
+  }
+
   async chat(message: string, conversationId?: string, userId?: string, language = 'en') {
     let convId = conversationId || `conv-${Date.now()}`;
+    let history: Array<{ role: 'user' | 'assistant'; content: string }> = [];
 
     // 1. Manage Conversation Persistence
     try {
       let conversation;
       if (conversationId) {
         conversation = await prisma.assistantConversation.findUnique({
-          where: { id: conversationId }
+          where: { id: conversationId },
+          include: {
+            messages: {
+              orderBy: { createdAt: 'asc' },
+              take: 8
+            }
+          }
         });
+        if (conversation?.messages) {
+          history = conversation.messages.map(m => ({
+            role: m.sender === 'USER' ? ('user' as const) : ('assistant' as const),
+            content: m.message
+          }));
+        }
       }
 
       if (!conversation) {
@@ -102,10 +218,11 @@ export class AssistantService {
     // Check external AI provider if configured, else use domain knowledge engine
     if (provider !== 'fallback' && env.AI_API_KEY) {
       try {
-        const domainKnowledge = this.getDomainKnowledgeFallback(message);
-        reply = domainKnowledge.reply;
-        citations = domainKnowledge.citations;
-      } catch {
+        const aiResult = await this.callLLM(message, history, language);
+        reply = aiResult.reply;
+        citations = aiResult.citations;
+      } catch (err: any) {
+        console.warn(`[Bharti AI] AI Provider error: ${err?.message || err}. Falling back to domain knowledge.`);
         const fallback = this.getDomainKnowledgeFallback(message);
         reply = fallback.reply;
         citations = fallback.citations;
@@ -116,7 +233,6 @@ export class AssistantService {
       citations = fallback.citations;
     }
 
-    // Record assistant reply if DB available
     try {
       await prisma.assistantMessage.create({
         data: {
@@ -134,9 +250,10 @@ export class AssistantService {
     return {
       conversationId: convId,
       reply,
+      answer: reply,
       citations,
       language,
-      provider: provider === 'fallback' ? 'Domain Knowledge Engine (ICAR / DA&FW)' : provider
+      provider: provider === 'fallback' ? 'Domain Knowledge Engine (ICAR / DA&FW)' : `${provider} (${env.AI_MODEL})`
     };
   }
 

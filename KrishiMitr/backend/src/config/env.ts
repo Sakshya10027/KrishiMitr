@@ -18,10 +18,10 @@ const envSchema = z.object({
   RATE_LIMIT_MAX: z.coerce.number().default(500),
   AUTH_RATE_LIMIT_MAX: z.coerce.number().default(20),
 
-  AI_PROVIDER: z.enum(['fallback', 'gemini', 'anthropic', 'openai']).default('fallback'),
+  AI_PROVIDER: z.enum(['fallback', 'gemini', 'anthropic', 'openai', 'groq', 'grok']).default('groq'),
   AI_API_KEY: z.string().optional().default(''),
-  AI_MODEL: z.string().default('gemini-1.5-flash'),
-  AI_BASE_URL: z.string().optional().default(''),
+  AI_MODEL: z.string().default('openai/gpt-oss-120b'),
+  AI_BASE_URL: z.string().optional().default('https://api.groq.com/openai/v1'),
 
   STORAGE_PROVIDER: z.enum(['local', 's3']).default('local'),
   UPLOAD_DIR: z.string().default('./uploads')
