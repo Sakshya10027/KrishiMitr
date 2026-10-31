@@ -141,41 +141,36 @@ npm run preview
 
 ```
 KrishiMitr/
-├── docs/
-│   ├── REFERENCE_AUDIT.md       # Target portal investigation & route inventory
-│   ├── IMPLEMENTATION_PLAN.md   # Architectural mapping & execution progress
-│   └── FEATURE_STATUS.md        # Feature verification matrix
-├── public/
-│   ├── favicon.svg
-│   └── icons.svg
-├── src/
-│   ├── assets/
-│   │   ├── images/              # Banner graphics, Swasth Dhara, Khet Hara
-│   │   └── logos/               # Emblem of India, SHC logo, NMNF logo, Bharti AI
-│   ├── components/
-│   │   ├── common/              # Header, NavigationDrawer, Breadcrumb, Footer, Bharti AI, Language Modal
-│   │   ├── dashboard/           # Metrics cards and progress tables
-│   │   ├── labs/                # Laboratory directory cards & filters
-│   │   ├── maps/                # Interactive SVG India nutrient map
-│   │   └── shc/                 # SHC search form, 12-parameter view, STCR calculator
-│   ├── context/
-│   │   └── LanguageContext.jsx  # Language preferences & translation state
-│   ├── pages/                   # All 16 public-facing and administrative pages
-│   ├── services/
-│   │   ├── labService.js        # Comprehensive registry covering all 36 States/UTs & districts
-│   │   ├── resourceService.js   # Circulars, SOPs, FAQs, and contact directories
-│   │   ├── soilHealthService.js # 12 nutrient calculations, STCR equations, mock records
-│   │   └── statsService.js      # Cycle I/II national summary stats & state progress
-│   ├── styles/
-│   │   ├── tokens.css           # Design tokens, color palette, typography
-│   │   └── portal.css           # Global portal stylesheet and print layout
-│   ├── App.jsx                  # Route definitions and layout wrapper
-│   ├── index.css                # Base stylesheet
-│   └── main.jsx                 # React root entry point
-├── .gitignore                   # Version control ignore configuration
-├── index.html                   # HTML root template with meta tags
-├── package.json                 # Project dependencies and scripts
-└── vite.config.js               # Vite bundler configuration
+├── frontend/                    # Modern React / Vite Frontend Application
+│   ├── public/
+│   │   ├── favicon.svg
+│   │   └── icons.svg
+│   ├── src/
+│   │   ├── assets/              # Banner graphics, Swasth Dhara, Khet Hara
+│   │   ├── components/          # Common, dashboard, labs, maps, and shc components
+│   │   ├── context/             # LanguageContext.jsx (i18n & translation state)
+│   │   ├── pages/               # All 16 public-facing and administrative pages
+│   │   ├── services/            # apiClient.js, lab, soil health, and stats services
+│   │   ├── styles/              # tokens.css, portal.css
+│   │   ├── App.jsx              # Route definitions and layout wrapper
+│   │   ├── index.css            # Base stylesheet
+│   │   └── main.jsx             # React root entry point
+│   ├── index.html               # HTML root template with meta tags
+│   ├── package.json             # Frontend dependencies and scripts
+│   └── vite.config.js           # Vite bundler and /api proxy configuration
+├── backend/                     # Node.js / Express / Prisma TypeScript Backend
+│   ├── prisma/                  # Schema, migrations, and seed scripts
+│   ├── src/
+│   │   ├── config/              # Database, env, cors configurations
+│   │   ├── middleware/          # Auth, error handling, rate limiting
+│   │   ├── modules/             # Auth, assistant, SHC, labs, admin, analytics
+│   │   └── server.ts            # Express server entry point
+│   ├── package.json             # Backend dependencies and scripts
+│   └── tsconfig.json            # TypeScript configuration
+├── docs/                        # Architecture and reference audits
+├── docker-compose.yml           # PostgreSQL container setup
+├── package.json                 # Workspace proxy scripts
+└── README.md
 ```
 
 ---
