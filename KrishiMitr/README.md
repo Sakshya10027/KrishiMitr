@@ -1,416 +1,525 @@
-# KrishiMitr — Soil Health Card Portal Recreation
+<div align="center">
 
-> **Educational & Technical Demonstration Project**  
-> An independent, full-stack, and functional reverse-engineered recreation of the Government of India's Soil Health Card Portal ([https://soilhealth.dac.gov.in](https://soilhealth.dac.gov.in)).  
-> *Notice: This is an academic and technical demonstration and is NOT an official Government of India service.*
+# KrishiMitr
 
----
+An independent, full-stack educational recreation of the Government of India's Soil Health Card Portal — scientific fertilizer recommendations, a national lab directory, GIS nutrient maps, and a multilingual AI farming assistant.
 
-## 1. Project Overview
+![React](https://img.shields.io/badge/REACT-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
+![Node.js](https://img.shields.io/badge/NODE.JS-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TYPESCRIPT-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/POSTGRESQL-4169E1?style=for-the-badge&logo=postgresql&logoColor=white)
+![License](https://img.shields.io/badge/STATUS-EDUCATIONAL_DEMO-007EC6?style=for-the-badge&labelColor=555555)
 
-**KrishiMitr** is a comprehensive, production-grade full-stack web application faithfully recreating the Ministry of Agriculture and Farmers Welfare's **Soil Health Card (SHC) Portal**. The project models public citizen services, official government aesthetics, an enterprise REST API backend, scientific fertilizer calculation engines, national laboratory directories, macro analytics, and multi-lingual access designed to empower Indian farmers with data-driven soil intelligence.
+<br />
 
-The application is architected as a modern **monorepo** featuring a **React 19 + Vite 8** frontend paired with a high-performance **Node.js + Express + TypeScript** backend powered by **Prisma ORM** and **PostgreSQL**.
+[Live Demo](#) · [Documentation](#overview) · [Report Bug](#) · [Request Feature](#)
 
----
+</div>
 
-## 2. Key Features & Capabilities
+**Current Version:** 1.0.0
+**Project Status:** Development / Educational Demonstration
 
-### 🎙️ 1. Bharti AI — Intelligent Kisan Assistant (Groq Cloud LLM & Multilingual Voice)
-- **High-Speed Cloud LLM Reasoning:** Powered by Groq Cloud API (`llama-3.3-70b-versatile` / `openai/gpt-oss-120b`) for rapid conversational intelligence tailored to Indian agriculture.
-- **Multilingual Voice Playback (Text-to-Speech):** High-fidelity voice narration supporting **11 Indian languages**:
-  - Hindi (हिन्दी)
-  - Marathi (मराठी)
-  - Gujarati (ગુજરાતી)
-  - Telugu (తెలుగు)
-  - Tamil (தமிழ்)
-  - Bengali (বাংলা)
-  - Punjabi (ਪੰਜਾਬੀ)
-  - Kannada (ಕನ್ನಡ)
-  - Malayalam (മലയാളം)
-  - Odia (ଓଡ଼ିଆ)
-  - Indian English
-- **Speech Synthesis Proxy (`/api/tts`):** Custom Vite dev middleware proxying natural TTS audio streams without browser CORS restrictions, with automatic fallback to Web Speech API.
-- **Dynamic On-the-Fly Script Translation:** Integrated `/api/translate` service ensuring answers and spoken audio strictly match the farmer's active regional script (Devanagari, Gurmukhi, Telugu, etc.).
-- **Voice Controls & Accessibility:**
-  - Dedicated in-widget native voice language selector.
-  - **Auto-Read Mode:** Automatically reads aloud all incoming answers for low-literacy farmers.
-  - Interactive audio waveforms and animated speaking indicators.
-  - Quick agronomic prompt chips localized per language.
-- **Three-Tier Resilience Engine:**
-  1. Primary: Enterprise Backend AI Endpoint (`/api/v1/assistant/chat`).
-  2. Secondary: Direct browser-side Groq Cloud API fallback.
-  3. Tertiary: Localized ICAR & DA&FW agronomic domain knowledge rule engine (runs completely offline).
+> **Notice:** This is an academic and technical demonstration project and is **NOT** an official Government of India service.
 
 ---
 
-### 📄 2. Soil Health Card Search & Certified PDF Generation (`/soilhealthcard`)
-- **Dual Search Modalities:**
-  - **Direct Mobile Search:** 10-digit phone lookup with `+91` validation and quick-fill test demo chips.
-  - **Cascading Geographical Hierarchy:** Dynamic lookup through `State -> District -> Sub-District -> Village -> Farmer Name`.
-- **Interactive Security:** Built-in reCAPTCHA verification widget.
-- **Complete 12-Parameter Lab Scorecard:**
-  - *Physical / Chemical:* Soil Reaction (pH), Electrical Conductivity (EC), Organic Carbon (OC).
-  - *Primary Macronutrients:* Available Nitrogen (N), Phosphorus ($P_2O_5$), Potassium ($K_2O$).
-  - *Secondary Nutrient:* Available Sulphur (S).
-  - *Micronutrients:* Zinc (Zn), Iron (Fe), Copper (Cu), Manganese (Mn), Boron (B).
-- **Server-Side Certified Vector PDF Export:** Backend streaming PDF generator built with `pdfkit`, producing official certified bilingual Soil Health Card documents with Ashoka emblem branding, laboratory ratings, and tailored fertilizer schedules.
-- **Client-Side Print Layout:** Dedicated `@media print` styling for instant browser printing and physical dispatch.
+## Overview
+
+**What the project does:**
+KrishiMitr faithfully recreates the Ministry of Agriculture and Farmers Welfare's Soil Health Card (SHC) Portal — modeling citizen services, a scientific fertilizer calculation engine, a national soil-testing laboratory directory, GIS nutrient maps, macro analytics, and multilingual access for Indian farmers.
+
+**Why it was built & Problem it solves:**
+Public agricultural data portals are often hard to extend, demo, or study as engineering systems. KrishiMitr rebuilds the Soil Health Card Portal end-to-end as a modern, open full-stack application — demonstrating how government-scale citizen services, scientific recommendation engines, and multilingual AI assistance can be implemented with a production-grade architecture.
+
+**Target users:**
+Students and developers studying full-stack government service design, and (within the demo) farmers, lab administrators, and citizen-support evaluators exploring the simulated portal.
+
+**Key capabilities:**
+- Bharti AI — a Groq-powered conversational assistant with 11-language voice playback for low-literacy accessibility.
+- ICAR-STCR scientific fertilizer recommendation engine converting nutrient deficits into commercial fertilizer dosages.
+- Pan-India soil testing laboratory directory covering 28 states, 8 UTs, 750+ districts, 3,850+ labs, and 1,240+ mobile vans.
+- Interactive GIS nutrient maps with 12 toggleable nutrient layers down to the district level.
 
 ---
 
-### 🧪 3. ICAR-STCR Precision Fertilizer Recommendation Engine (`/fertilizer`)
-- **Scientific STCR Equations:** Implements the Indian Council of Agricultural Research (ICAR) **Soil Test Crop Response** methodology instead of blanket generic recommendations.
-- **Precision Crop Calculations:** Site-specific equations tailored to major crop cycles (Wheat, Paddy, Mustard, Sugarcane, Maize, Cotton, Pulses).
-- **Commercial Fertilizer Conversion:** Automatically translates elemental nutrient deficits ($N, P_2O_5, K_2O$) into commercial fertilizer bags:
-  - Urea (46% N)
-  - Di-Ammonium Phosphate / DAP (18% N, 46% $P_2O_5$)
-  - Muriate of Potash / MOP (60% $K_2O$)
-  - Single Super Phosphate (SSP)
-- **Application Schedule Breakdown:** Split application schedules categorized into **Basal Application** (at sowing) and **Top-Dressing** (at critical vegetative / flowering stages).
-- **Organic Amendment Adjustments:** Integrated Farm Yard Manure (FYM), vermicompost, and green manuring (Dhaincha/Sanai) calculations.
+## Features
+
+### Bharti AI — Intelligent Kisan Assistant
+- **High-Speed Cloud LLM Reasoning:** Powered by Groq Cloud API (`llama-3.3-70b-versatile` / `openai/gpt-oss-120b`) for agriculture-tailored conversational intelligence.
+- **Multilingual Voice Playback (TTS):** Narration in 11 Indian languages — Hindi, Marathi, Gujarati, Telugu, Tamil, Bengali, Punjabi, Kannada, Malayalam, Odia, and Indian English.
+- **Speech Synthesis Proxy:** Custom Vite dev middleware (`/api/tts`) proxies TTS audio streams without CORS restrictions, with Web Speech API fallback.
+- **On-the-Fly Script Translation:** `/api/translate` keeps spoken and written answers matched to the farmer's active regional script (Devanagari, Gurmukhi, Telugu, etc.).
+- **Accessibility Controls:** In-widget voice language selector, Auto-Read mode, animated speaking indicators, and localized quick-prompt chips.
+- **Three-Tier Resilience Engine:** Enterprise backend endpoint → direct browser-side Groq fallback → fully offline ICAR/DA&FW rule-based knowledge engine.
+
+### Soil Health Card Search & Certified PDF Generation
+- **Dual Search Modalities:** Direct 10-digit mobile lookup, or cascading State → District → Sub-District → Village → Farmer Name search.
+- **Interactive Security:** Built-in reCAPTCHA verification.
+- **12-Parameter Lab Scorecard:** pH, EC, Organic Carbon, N/P₂O₅/K₂O, Sulphur, and Zn/Fe/Cu/Mn/B micronutrients.
+- **Server-Side Certified PDF Export:** `pdfkit`-based streaming generator producing bilingual Soil Health Cards with emblem branding and fertilizer schedules.
+- **Client-Side Print Layout:** Dedicated `@media print` styling for instant browser printing.
+
+### ICAR-STCR Precision Fertilizer Recommendation Engine
+- **Scientific STCR Equations:** Implements ICAR's Soil Test Crop Response methodology instead of blanket recommendations.
+- **Precision Crop Calculations:** Site-specific equations for Wheat, Paddy, Mustard, Sugarcane, Maize, Cotton, and Pulses.
+- **Commercial Fertilizer Conversion:** Converts elemental nutrient deficits into Urea, DAP, MOP, and SSP bag quantities.
+- **Application Schedule Breakdown:** Splits recommendations into Basal and Top-Dressing applications.
+- **Organic Amendment Adjustments:** Accounts for FYM, vermicompost, and green manuring.
+
+### Pan-India Soil Testing Laboratories Directory
+- **National Coverage:** 28 states, 8 UTs, 750+ districts, 3,850+ static labs, 1,240+ mobile vans.
+- **Four Lab Categories:** DSTL, ICAR-KVK Laboratory, Mobile Soil Testing Laboratory (MSTL), and Agricultural University/Central Institutes.
+- **Interactive Filtering & Actions:** Cascading State/District dropdowns, type filter pills, direct call/email links, Google Maps directions, and proximity-based nearby-lab lookup.
+
+### Interactive GIS Soil Nutrient Maps
+- **National SVG Map:** Interactive map of all 36 states/UTs with toggleable nutrient layers.
+- **District-Level Explorer:** Drill into any state's constituent districts.
+- **12 Nutrient Layer Overlays:** N, P, K, Organic Carbon, pH, EC, Zn, S, Fe, Cu, Mn, B.
+- **Export & Comparison:** Switch between District Cards and Tabular views with live CSV export.
+
+### Macro Analytics & School Soil Health Program
+- **National Progress Dashboard:** Cycle I (2015–17) vs Cycle II (2017–19) comparisons with CSV export.
+- **School Soil Health Program:** Tracks 130 schools, 42 states/UTs, 51,628 students, and 22,771 samples.
+
+### Multi-Role Administrative Portal & RBAC
+- **7 User Roles:** `CENTER_ADMIN`, `STATE_ADMIN`, `DISTRICT_ADMIN`, `LAB_ADMIN`, `RAWE_STUDENT`, `FARMER`, `PUBLIC_USER`.
+- **Secure Authentication:** JWT access/refresh rotation, HTTP-only cookies, bcrypt hashing, rate limiting.
+- **Administrative Workflows:** Login, citizen registration, RAWE student registration, password recovery, audit logging.
+
+### Citizen Support & Grievance Redressal
+- **Ticket Submission:** Automated reference codes (e.g., `SHC-2026-XXXX`).
+- **Live Tracking:** PENDING / IN_PROGRESS / RESOLVED / CLOSED status with resolution comments.
+- **FAQ Accordions:** Soil sampling, lab fees, and fertilizer schedules.
+
+### National Mission on Natural Farming & Library Hubs
+- **NMNF Knowledge Center:** SOPs for Jeevamrit, Beejamrit, Acchadana, and Whapasa.
+- **Resource Libraries:** Official circulars, SOPs, school science guides, and a media gallery.
 
 ---
 
-### 🏢 4. Pan-India Soil Testing Laboratories Directory (`/soilTestingLabs`)
-- **Complete National Coverage:** All **28 States and 8 Union Territories** covering **750+ districts** with **3,850+ static laboratories** and **1,240+ mobile vans**.
-- **Four Categorized Laboratory Types:**
-  - **District Soil Testing Laboratory (DSTL):** State Dept. of Agriculture static laboratory facilities.
-  - **ICAR - Krishi Vigyan Kendra (KVK) Laboratory:** Specialized micronutrient and irrigation water testing farms.
-  - **Mobile Soil Testing Laboratory (MSTL):** Doorstep rapid diagnostic testing vans.
-  - **Agricultural University & Central Institutes:** Apex research laboratories (e.g., IARI Pusa, PAU Ludhiana, TNAU Coimbatore, CCSHAU Hisar, RBS College Bichpuri).
-- **Interactive Filtering & Actions:**
-  - Cascading State and District dropdowns with keyword instant search.
-  - Filter pills for laboratory types.
-  - 📞 **Direct Call (`tel:`)** link to lab officers.
-  - ✉️ **Send Email (`mailto:`)** inquiry link.
-  - 🧭 **Google Maps Directions** centered on verified laboratory coordinates.
-  - Proximity-based nearby lab locator (`/api/v1/labs/nearby`).
+## Tech Stack
 
----
+### Frontend
+| Technology | Purpose |
+|------------|---------|
+| React 19 | UI library |
+| Vite 8 | Build tool and dev server, with custom TTS/translation proxy middleware |
+| React Router v7 | Client-side routing |
+| Lucide React | Icon set |
+| Vanilla CSS (Design Tokens) | `tokens.css`, `portal.css`, CSS Grid/Flexbox, `@media print` |
+| Oxlint | Linting |
+| Context-based i18n | Multilingual localization + Google Translate API + Web Speech API |
 
-### 🗺️ 5. Interactive GIS Soil Nutrient Maps & District Explorer (`/NutrientMapCycleII`)
-- **Dual Interactive GIS Modes:**
-  - **National SVG Map:** Real interactive geographic map rendering all 36 States & UTs with toggleable nutrient layers.
-  - **District-Level Soil Explorer:** Deep dive into any State to inspect constituent districts (e.g., all 75 districts of UP, 23 of Punjab, 36 of Maharashtra).
-- **12 Nutrient Layer Overlays:** Toggle between Nitrogen, Phosphorus, Potassium, Organic Carbon, pH Reaction, Electrical Conductivity, Zinc, Sulphur, Iron, Copper, Manganese, and Boron.
-- **Export & Comparison:** Switch between color-coded District Cards View and full Tabular Data with live CSV export (`Export CSV`).
-
----
-
-### 📊 6. Macro Analytics & School Soil Health Program (`/dashboard` & `/school`)
-- **National Progress Dashboard:** National comparisons of Cycle I (2015-17) vs Cycle II (2017-19) with state-by-state targets vs samples tested, completion percentages, and live CSV export.
-- **School Soil Health Program:** Participatory educational tracking covering 130 schools, 42 states/UTs, 51,628 students, and 22,771 samples analyzed by rural youth.
-
----
-
-### 🔐 7. Multi-Role Administrative Portal & RBAC (`/admin`)
-- **Role-Based Access Control (RBAC):** Supports 7 distinct user roles:
-  - `CENTER_ADMIN`, `STATE_ADMIN`, `DISTRICT_ADMIN`, `LAB_ADMIN`, `RAWE_STUDENT`, `FARMER`, and `PUBLIC_USER`.
-- **Secure Authentication:** JWT access and refresh token rotation, HTTP-only cookie support, bcrypt password hashing, and rate limiting.
-- **Administrative Workflows:** Official Login (`/admin`), Citizen User Registration (`/admin/userRegistration`), Rural Agricultural Work Experience (RAWE) Student Registration (`/admin/RAWERegistration`), Password Recovery (`/admin/ForgotPassword`), and Audit Logging.
-
----
-
-### 🎫 8. Citizen Support & Grievance Redressal Desk (`/support`)
-- **Ticket Submission:** Citizens can lodge grievance tickets with automated reference code generation (e.g., `SHC-2026-XXXX`).
-- **Live Ticket Tracking:** Instant status verification (PENDING, IN_PROGRESS, RESOLVED, CLOSED) with resolution comments.
-- **Frequently Asked Questions:** Interactive accordions covering soil sampling, laboratory fees, and fertilizer schedules.
-
----
-
-### 🌿 9. National Mission on Natural Farming & Library Hubs
-- **NMNF Knowledge Center (`/National_Mission_on_Natural_Farming`):** Detailed SOPs for the 4 biological pillars: *Jeevamrit*, *Beejamrit*, *Acchadana*, and *Whapasa*.
-- **Resource Libraries:** Official circulars, operational guidelines, and SOP downloads (`/GeneralResources`), school science guides (`/SchoolLibrary`), and media gallery (`/media`).
-
----
-
-## 3. Technology Stack
-
-### Frontend Application
-| Layer | Technologies |
-| :--- | :--- |
-| **Framework** | React 19 (`react` ^19.3.1, `react-dom` ^19.3.1) |
-| **Build Tool & Dev Server** | Vite 8 (`vite` ^8.3.4) with custom TTS & Translation proxy middleware |
-| **Routing** | React Router v7 (`react-router-dom` ^7.18.4) |
-| **Icons & UI** | Lucide React (`lucide-react` ^1.60.0) |
-| **Styling** | Vanilla CSS Design Tokens (`src/styles/tokens.css`, `src/styles/portal.css`), CSS Grid, Flexbox, `@media print` |
-| **Linter** | Oxlint (`oxlint` ^1.88.0) |
-| **i18n & Translation** | Context-based localization + Google Translate API + Web Speech API |
-
-### Backend Service
-| Layer | Technologies |
-| :--- | :--- |
-| **Runtime & Framework** | Node.js (v18+) with Express 4 (`express` ^4.21.2) |
-| **Language** | TypeScript 5 (`typescript` ^5.7.3) executed via `tsx` |
-| **Database & ORM** | PostgreSQL 16 with Prisma ORM (`@prisma/client` ^5.22.0) |
-| **Security & Middleware** | Helmet (`helmet` ^8.0.0), CORS, `express-rate-limit`, `cookie-parser`, `bcryptjs` |
-| **Authentication** | JWT (`jsonwebtoken` ^9.0.2) with Access & Refresh Token rotation |
-| **Validation** | Zod (`zod` ^3.24.1) schema validation |
-| **Document Generation** | PDFKit (`pdfkit` ^0.16.0) for certified vector PDFs |
-| **Logging** | Pino & Pino-HTTP (`pino` ^9.6.0, `pino-http` ^10.4.0) |
-| **Testing** | Vitest (`vitest` ^2.1.8) and Supertest (`supertest` ^7.0.0) |
+### Backend
+| Technology | Purpose |
+|------------|---------|
+| Node.js 18+ / Express 4 | API server runtime and framework |
+| TypeScript 5 (via `tsx`) | Backend language |
+| PostgreSQL 16 + Prisma ORM | Relational database and ORM |
+| Helmet, CORS, express-rate-limit, cookie-parser, bcryptjs | Security middleware |
+| JSON Web Token | Access/refresh token authentication |
+| Zod | Schema validation |
+| PDFKit | Certified vector PDF generation |
+| Pino / Pino-HTTP | Structured logging |
+| Vitest / Supertest | Testing |
 
 ### AI & Speech Infrastructure
 | Feature | Implementation |
-| :--- | :--- |
-| **Cloud LLM Provider** | Groq Cloud API (`llama-3.3-70b-versatile`, `openai/gpt-oss-120b`) |
-| **Text-to-Speech (TTS)** | Google Translate TTS audio streaming proxy via Vite middleware (`/api/tts`) + Web Speech API fallback |
-| **Speech Translation** | Dynamic multi-language script translator (`/api/translate`) |
-| **Offline Fallback** | Localized agronomic rule engine modeled after ICAR-IISS bulletins |
+|---------|-----------------|
+| Cloud LLM Provider | Groq Cloud API (`llama-3.3-70b-versatile`, `openai/gpt-oss-120b`) |
+| Text-to-Speech | Google Translate TTS proxy (`/api/tts`) + Web Speech API fallback |
+| Speech Translation | Dynamic script translator (`/api/translate`) |
+| Offline Fallback | Localized ICAR-IISS-modeled agronomic rule engine |
 
 ---
 
-## 4. Project Structure
+## Project Architecture
+
+The application is a **monorepo** with a React/Vite frontend and a Node/Express/TypeScript backend, backed by PostgreSQL via Prisma.
+
+```mermaid
+graph TD
+    Client[React 19 / Vite 8 Frontend] -->|REST API /api/v1| API[Express + TypeScript Backend]
+    Client -->|/api/tts, /api/translate| ViteProxy[Vite Dev Middleware]
+
+    API --> AuthModule[Auth Module - JWT]
+    API --> SHCModule[Soil Health Cards Module]
+    API --> FertModule[Fertilizer Module - ICAR-STCR]
+    API --> LabsModule[Laboratories Module]
+    API --> MapsModule[Nutrient Maps Module]
+    API --> AnalyticsModule[Analytics Module]
+    API --> AssistantModule[Bharti AI Assistant Module]
+    API --> SupportModule[Support Module]
+    API --> AdminModule[Admin Module]
+
+    AuthModule --> DB[(PostgreSQL via Prisma)]
+    SHCModule --> DB
+    FertModule --> DB
+    LabsModule --> DB
+    MapsModule --> DB
+    AnalyticsModule --> DB
+    SupportModule --> DB
+    AdminModule --> DB
+
+    AssistantModule --> Groq[Groq Cloud LLM]
+    AssistantModule -->|Offline Fallback| RuleEngine[ICAR/DA&FW Rule Engine]
+    SHCModule --> PDFService[PDFKit Certified PDF Generator]
+```
+
+- **Client:** React 19 SPA with context-based i18n, built-in offline-resilient mock fallbacks, and a dedicated TTS/translation proxy for Bharti AI.
+- **Server:** Modular Express + TypeScript backend organized by domain (auth, SHC, fertilizer, labs, maps, analytics, assistant, support, admin), all persisted through Prisma to PostgreSQL.
+
+---
+
+## Folder Structure
 
 ```
 KrishiMitr/
-├── frontend/                               # React 19 + Vite 8 Frontend Application
-│   ├── public/                             # Favicons and SVG sprite icons
+├── frontend/                       # React 19 + Vite 8 Frontend Application
+│   ├── public/                     # Favicons and SVG sprite icons
 │   ├── src/
-│   │   ├── assets/                         # Emblems, national logos, and banner graphics
+│   │   ├── assets/                 # Emblems, national logos, banner graphics
 │   │   ├── components/
-│   │   │   ├── common/                     # Header, Footer, BhartiAIWidget, NavDrawer, Breadcrumbs
-│   │   │   ├── dashboard/                  # Metric counters, state tables, charts
-│   │   │   ├── labs/                       # Laboratory directory cards, filter pills, ribbons
-│   │   │   ├── maps/                       # Interactive India GIS SVG nutrient maps
-│   │   │   └── shc/                        # SHC search forms, 12-parameter scorecards, print views
-│   │   ├── context/                        # LanguageContext.jsx (multilingual i18n state)
-│   │   ├── i18n/                           # Static dictionary & page-level translation mappings
-│   │   ├── pages/                          # All 18 public and administrative pages
-│   │   ├── services/                       # Centralized apiClient.js, lab, soil health, and stats services
-│   │   ├── styles/                         # tokens.css, portal.css, App.css
-│   │   ├── App.jsx                         # App routes and layout configuration
-│   │   └── main.jsx                        # React root entry point
-│   ├── index.html                          # Root HTML template with government meta tags
-│   ├── package.json                        # Frontend dependencies and scripts
-│   └── vite.config.js                      # Vite configuration with /api/tts & /api/translate proxies
+│   │   │   ├── common/             # Header, Footer, BhartiAIWidget, NavDrawer, Breadcrumbs
+│   │   │   ├── dashboard/          # Metric counters, state tables, charts
+│   │   │   ├── labs/               # Laboratory directory cards, filter pills, ribbons
+│   │   │   ├── maps/               # Interactive India GIS SVG nutrient maps
+│   │   │   └── shc/                # SHC search forms, 12-parameter scorecards, print views
+│   │   ├── context/                # LanguageContext.jsx (multilingual i18n state)
+│   │   ├── i18n/                   # Static dictionary & page-level translation mappings
+│   │   ├── pages/                  # All 18 public and administrative pages
+│   │   ├── services/                # apiClient.js, lab/soil-health/stats services
+│   │   ├── styles/                  # tokens.css, portal.css, App.css
+│   │   ├── App.jsx                   # App routes and layout configuration
+│   │   └── main.jsx                   # React root entry point
+│   ├── index.html                     # Root HTML template with government meta tags
+│   ├── package.json                   # Frontend dependencies and scripts
+│   └── vite.config.js                  # Vite config with /api/tts & /api/translate proxies
 │
-├── backend/                                # Node.js + Express + TypeScript Backend
+├── backend/                         # Node.js + Express + TypeScript Backend
 │   ├── prisma/
-│   │   ├── schema.prisma                   # Complete relational database schema (PostgreSQL)
-│   │   └── seed.ts                         # Database seeder (36 States/UTs, 750+ districts, labs, crops)
+│   │   ├── schema.prisma             # Complete relational database schema (PostgreSQL)
+│   │   └── seed.ts                    # DB seeder (36 states/UTs, 750+ districts, labs, crops)
 │   ├── src/
-│   │   ├── config/                         # Database (Prisma), env (Zod), cors configurations
-│   │   ├── middleware/                     # JWT authenticate, authorize, errorHandler, rateLimiter
+│   │   ├── config/                    # Database (Prisma), env (Zod), CORS configuration
+│   │   ├── middleware/                # authenticate, authorize, errorHandler, rateLimiter
 │   │   ├── modules/
-│   │   │   ├── admin/                      # Audit logs and user administration
-│   │   │   ├── analytics/                  # Cycle I/II comparisons and school metrics
-│   │   │   ├── assistant/                  # Bharti AI Groq integration & domain fallback
-│   │   │   ├── auth/                       # Login, registration, RAWE onboarding, password recovery
-│   │   │   ├── fertilizer/                 # ICAR-STCR calculation equations & fertilizer dosing
-│   │   │   ├── laboratories/               # Lab directory and geolocation nearby endpoints
-│   │   │   ├── locations/                  # Cascading States, Districts, Sub-districts, Villages
-│   │   │   ├── nutrient-maps/              # State & District GIS fertility statistics
-│   │   │   ├── resources/                  # SOPs, circulars, and media catalog
-│   │   │   ├── soil-health-cards/          # SHC lookup, 12-parameter evaluation, PDF generator
-│   │   │   └── support/                    # Citizen grievance ticket creation and tracking
+│   │   │   ├── admin/                 # Audit logs and user administration
+│   │   │   ├── analytics/             # Cycle I/II comparisons and school metrics
+│   │   │   ├── assistant/             # Bharti AI Groq integration & domain fallback
+│   │   │   ├── auth/                  # Login, registration, RAWE onboarding, password recovery
+│   │   │   ├── fertilizer/            # ICAR-STCR calculation equations & dosing
+│   │   │   ├── laboratories/          # Lab directory and geolocation nearby endpoints
+│   │   │   ├── locations/             # Cascading States, Districts, Sub-districts, Villages
+│   │   │   ├── nutrient-maps/         # State & district GIS fertility statistics
+│   │   │   ├── resources/             # SOPs, circulars, media catalog
+│   │   │   ├── soil-health-cards/     # SHC lookup, 12-parameter evaluation, PDF generator
+│   │   │   └── support/               # Citizen grievance ticket creation and tracking
 │   │   ├── services/
-│   │   │   ├── csv/                        # Live sanitized CSV exporter
-│   │   │   └── pdf/                        # Certified Soil Health Card vector PDF generator (PDFKit)
-│   │   ├── tests/                          # Vitest API and fertilizer algorithm test suites
-│   │   ├── utils/                          # Standard API responses, error classes, pagination
-│   │   ├── app.ts                          # Express application setup
-│   │   └── server.ts                       # Server bootstrap and port listener
-│   ├── package.json                        # Backend dependencies and scripts
+│   │   │   ├── csv/                   # Live sanitized CSV exporter
+│   │   │   └── pdf/                    # Certified SHC vector PDF generator (PDFKit)
+│   │   ├── tests/                      # Vitest API and fertilizer algorithm test suites
+│   │   ├── utils/                       # Standard API responses, error classes, pagination
+│   │   ├── app.ts                        # Express application setup
+│   │   └── server.ts                      # Server bootstrap and port listener
+│   ├── package.json                       # Backend dependencies and scripts
 │   └── tsconfig.json                       # TypeScript compiler options
 │
-├── docs/                                   # Architectural audit, API specs, and feature status
-├── docker-compose.yml                      # PostgreSQL 16 container definition
-├── package.json                            # Workspace root orchestration scripts
-└── README.md                               # Project documentation
+├── docs/                             # Architectural audit, API specs, feature status
+├── docker-compose.yml                 # PostgreSQL 16 container definition
+├── package.json                        # Workspace root orchestration scripts
+└── README.md                            # Project documentation
 ```
 
 ---
 
-## 5. Getting Started & Development
+## Folder Explanation
 
-### Prerequisites
-- **Node.js:** v18.0.0 or higher
-- **npm:** v9.0.0 or higher
-- **Docker:** (Optional, for running PostgreSQL locally)
+| Folder | Purpose |
+|--------|---------|
+| `frontend/src/components` | UI building blocks grouped by domain: common, dashboard, labs, maps, shc. |
+| `frontend/src/context` | Multilingual i18n state via `LanguageContext.jsx`. |
+| `frontend/src/pages` | All 18 public and administrative route-level pages. |
+| `frontend/src/services` | Centralized API client and domain-specific service wrappers. |
+| `backend/prisma` | Database schema definition and the national data seeder. |
+| `backend/src/modules` | Domain-separated business logic — auth, SHC, fertilizer, labs, maps, analytics, assistant, support, admin. |
+| `backend/src/services` | Cross-cutting services: CSV export and PDF generation. |
+| `backend/src/middleware` | Authentication, authorization, error handling, and rate limiting. |
+| `docs/` | Architectural audits, API specs, and feature status tracking. |
 
 ---
 
-### Step 1: Install Dependencies
-From the project root (`KrishiMitr`):
-```bash
-# Install frontend dependencies
-npm install --prefix frontend
+## File Explanation
 
-# Install backend dependencies
+- **`backend/src/app.ts`**: Express application setup — middleware registration and route mounting.
+- **`backend/src/server.ts`**: Server bootstrap and port listener.
+- **`backend/prisma/schema.prisma`**: Full relational schema for users, soil health cards, laboratories, locations, and support tickets.
+- **`backend/prisma/seed.ts`**: Seeds the database with 36 states/UTs, 750+ districts, laboratories, test cards, crops, and demo admin accounts.
+- **`backend/src/services/pdf/`**: PDFKit-based certified bilingual Soil Health Card generator.
+- **`frontend/src/App.jsx`**: Route and layout configuration for all 18 pages.
+- **`frontend/src/context/LanguageContext.jsx`**: Multilingual state used by Bharti AI and page-level translations.
+- **`frontend/vite.config.js`**: Configures the `/api/tts` and `/api/translate` dev proxy middleware.
+
+---
+
+## Prerequisites
+
+- **Node.js**: v18.0.0 or higher
+- **npm**: v9.0.0 or higher
+- **Docker**: Optional, for running PostgreSQL locally
+
+---
+
+## Installation Guide
+
+**1. Clone repository**
+```bash
+git clone <your-repo-url>
+cd KrishiMitr
+```
+
+**2. Install Frontend Dependencies**
+```bash
+npm install --prefix frontend
+```
+
+**3. Install Backend Dependencies**
+```bash
 npm install --prefix backend
 ```
 
 ---
 
-### Step 2: Configure Environment Variables
+## Environment Variables
 
-#### Frontend Configuration (`frontend/.env`):
-Create `frontend/.env` (or copy from `frontend/.env.example`):
-```env
-# Backend API Base URL
-VITE_API_BASE_URL=http://localhost:4000/api/v1
+### Frontend (`frontend/.env`)
+| Variable | Required | Description | Example |
+|----------|----------|-------------|---------|
+| `VITE_API_BASE_URL` | Yes | Backend API base URL | `http://localhost:4000/api/v1` |
+| `VITE_GROQ_API_KEY` | No | Groq Cloud API key for direct client-side AI fallback | `your_groq_api_key_here` |
+| `VITE_GROQ_MODEL` | No | Groq model identifier | `openai/gpt-oss-120b` |
 
-# Groq Cloud API for Bharti AI (Optional, direct client fallback)
-VITE_GROQ_API_KEY=your_groq_api_key_here
-VITE_GROQ_MODEL=openai/gpt-oss-120b
-```
-
-#### Backend Configuration (`backend/.env`):
-Create `backend/.env` (or copy from `backend/.env.example`):
-```env
-PORT=4000
-NODE_ENV=development
-DATABASE_URL="postgresql://postgres:postgres@localhost:5432/krishimitr?schema=public"
-JWT_SECRET="super-secret-jwt-key-for-krishimitr-portal-2026"
-JWT_REFRESH_SECRET="super-secret-refresh-key-for-krishimitr-portal-2026"
-CORS_ORIGIN="http://localhost:5173,http://localhost:3000"
-
-# AI Provider Settings (Groq Cloud API)
-AI_PROVIDER=groq
-AI_API_KEY=your_groq_api_key_here
-AI_BASE_URL=https://api.groq.com/openai/v1
-AI_MODEL=openai/gpt-oss-120b
-```
+### Backend (`backend/.env`)
+| Variable | Required | Description | Example |
+|----------|----------|-------------|---------|
+| `PORT` | No | Server port | `4000` |
+| `NODE_ENV` | No | Environment mode | `development` |
+| `DATABASE_URL` | Yes | PostgreSQL connection string | `postgresql://postgres:postgres@localhost:5432/krishimitr?schema=public` |
+| `JWT_SECRET` | Yes | Access token signing secret | `super-secret-jwt-key-for-krishimitr-portal-2026` |
+| `JWT_REFRESH_SECRET` | Yes | Refresh token signing secret | `super-secret-refresh-key-for-krishimitr-portal-2026` |
+| `CORS_ORIGIN` | Yes | Allowed frontend origins (comma-separated) | `http://localhost:5173,http://localhost:3000` |
+| `AI_PROVIDER` | Yes | AI provider identifier | `groq` |
+| `AI_API_KEY` | Yes | Groq Cloud API key | `your_groq_api_key_here` |
+| `AI_BASE_URL` | Yes | Groq API base URL | `https://api.groq.com/openai/v1` |
+| `AI_MODEL` | Yes | Groq model identifier | `openai/gpt-oss-120b` |
 
 ---
 
-### Step 3: Database Setup (PostgreSQL & Prisma)
+## Running the Project
 
-1. **Start PostgreSQL via Docker (if running locally):**
-   ```bash
-   docker-compose up -d postgres
-   ```
-2. **Generate Prisma Client & Run Migrations:**
-   ```bash
-   cd backend
-   npm run prisma:generate
-   npm run prisma:migrate
-   ```
-3. **Seed Database with Baseline National Data:**
-   ```bash
-   npm run prisma:seed
-   ```
-   *Populates 36 States/UTs, 750+ districts, accredited laboratories, test cards, crop recommendations, and demo administrative accounts.*
-
----
-
-### Step 4: Running the Applications
-
-#### Option A: Run Full Stack Simultaneously (Recommended)
-From the project root:
+**Database Setup (PostgreSQL & Prisma)**
 ```bash
-# Terminal 1: Run Backend
+# 1. Start PostgreSQL via Docker (optional)
+docker-compose up -d postgres
+
+# 2. Generate Prisma Client & run migrations
+cd backend
+npm run prisma:generate
+npm run prisma:migrate
+
+# 3. Seed baseline national data
+npm run prisma:seed
+```
+Seeding populates 36 states/UTs, 750+ districts, accredited laboratories, test cards, crop recommendations, and demo administrative accounts.
+
+**Development Mode — Option A: Full Stack**
+```bash
+# Terminal 1: Backend
 npm run dev:backend
 
-# Terminal 2: Run Frontend
+# Terminal 2: Frontend
 npm run dev:frontend
 ```
 
-#### Option B: Run Standalone Frontend with Offline Resilient Mock Fallbacks
-The frontend is architected with complete offline resilience. If the backend is not running, the application automatically uses built-in datasets for laboratories, test cards, nutrient maps, and Bharti AI domain fallback:
+**Development Mode — Option B: Frontend Only (Offline-Resilient)**
+The frontend automatically falls back to built-in datasets for labs, test cards, nutrient maps, and Bharti AI if the backend isn't running:
 ```bash
 npm run dev
 # or
 npm run dev:frontend
 ```
 
-Access the applications in your browser:
-- **Frontend Portal:** [http://localhost:5173](http://localhost:5173)
-- **Backend API:** [http://localhost:4000/api/v1](http://localhost:4000/api/v1)
-- **Backend Health Check:** [http://localhost:4000/api/v1/health](http://localhost:4000/api/v1/health)
+**Access Points**
+- Frontend Portal: `http://localhost:5173`
+- Backend API: `http://localhost:4000/api/v1`
+- Backend Health Check: `http://localhost:4000/api/v1/health`
 
 ---
 
-## 6. Backend API Endpoints Reference
+## Application Workflow
 
-The backend exposes a structured, RESTful API versioned under `/api/v1`:
+**Bharti AI Three-Tier Resilience Flow**
+```mermaid
+sequenceDiagram
+    Client->>Backend: POST /api/v1/assistant/chat
+    alt Backend reachable
+        Backend->>Groq: Forward query to Groq Cloud LLM
+        Groq-->>Backend: AI response
+        Backend-->>Client: Response + optional TTS trigger
+    else Backend unreachable
+        Client->>Groq: Direct browser-side Groq API call
+        alt Groq reachable
+            Groq-->>Client: AI response
+        else Groq unreachable
+            Client->>Client: ICAR/DA&FW offline rule engine
+        end
+    end
+    Client->>TTSProxy: /api/tts (voice playback)
+    TTSProxy-->>Client: Audio stream in selected language
+```
+
+**Soil Health Card Search & PDF Flow**
+1. Citizen searches by mobile number or cascading State → District → Sub-District → Village → Farmer Name.
+2. reCAPTCHA verification is completed.
+3. Backend returns the 12-parameter lab scorecard with rating pills.
+4. The ICAR-STCR engine computes tailored Basal/Top-Dressing fertilizer recommendations.
+5. User downloads the server-generated certified bilingual PDF (PDFKit) or uses the browser print layout.
+
+---
+
+## API Documentation
+
+The backend exposes a structured, RESTful API versioned under `/api/v1`.
 
 | Module | Method | Endpoint | Description | Access |
-| :--- | :--- | :--- | :--- | :--- |
-| **System** | `GET` | `/health` | Server status and database readiness check | Public |
-| **Auth** | `POST` | `/auth/login` | Administrative & citizen login (returns JWT) | Public |
-| **Auth** | `POST` | `/auth/register` | Citizen user registration | Public |
-| **Auth** | `POST` | `/auth/register-rawe` | RAWE Student registration | Public |
-| **Auth** | `POST` | `/auth/forgot-password` | Password reset request | Public |
-| **Auth** | `GET` | `/auth/me` | Fetch active user profile from JWT session | Authenticated |
-| **Soil Health Cards** | `POST` | `/soil-health-cards/search` | Search cards by mobile or cascading geography | Public |
-| **Soil Health Cards** | `GET` | `/soil-health-cards/:id` | Retrieve 12-parameter lab scorecard | Public |
-| **Soil Health Cards** | `GET` | `/soil-health-cards/:id/pdf` | Download certified bilingual vector PDF card | Public |
-| **Fertilizer Engine** | `POST` | `/fertilizer/recommendations` | Calculate ICAR-STCR precision crop dosages | Public |
-| **Laboratories** | `GET` | `/labs` | Pan-India lab directory with state/district filters | Public |
-| **Laboratories** | `GET` | `/labs/nearby` | Find nearest laboratories using lat/lng geolocation | Public |
-| **Nutrient Maps** | `GET` | `/nutrient-maps/states` | Fetch state-level macro/micronutrient stats | Public |
-| **Nutrient Maps** | `GET` | `/nutrient-maps/districts` | Fetch district-level fertility stats for any state | Public |
-| **Analytics** | `GET` | `/analytics/overview` | Cycle I vs Cycle II national progress comparison | Public |
-| **Analytics** | `GET` | `/analytics/exports/csv` | Download national progress dataset as CSV | Public |
-| **Analytics** | `GET` | `/analytics/schools` | School Soil Health Program participation metrics | Public |
-| **Support Desk** | `POST` | `/support/tickets` | Submit citizen grievance ticket | Public |
-| **Support Desk** | `GET` | `/support/tickets/:id` | Track grievance ticket status and updates | Public |
-| **Bharti AI** | `POST` | `/assistant/chat` | Chat with Bharti AI (Groq LLM + domain fallback) | Public |
-| **Locations** | `GET` | `/locations/states` | Cascading list of all 36 States & UTs | Public |
-| **Locations** | `GET` | `/locations/districts` | List of constituent districts for selected state | Public |
-| **Admin** | `GET` | `/admin/audit-logs` | Security and administrative audit trail | Admin Only |
+|--------|--------|----------|-------------|--------|
+| System | GET | `/health` | Server status and database readiness check | Public |
+| Auth | POST | `/auth/login` | Administrative & citizen login (returns JWT) | Public |
+| Auth | POST | `/auth/register` | Citizen user registration | Public |
+| Auth | POST | `/auth/register-rawe` | RAWE student registration | Public |
+| Auth | POST | `/auth/forgot-password` | Password reset request | Public |
+| Auth | GET | `/auth/me` | Fetch active user profile from JWT session | Authenticated |
+| Soil Health Cards | POST | `/soil-health-cards/search` | Search cards by mobile or cascading geography | Public |
+| Soil Health Cards | GET | `/soil-health-cards/:id` | Retrieve 12-parameter lab scorecard | Public |
+| Soil Health Cards | GET | `/soil-health-cards/:id/pdf` | Download certified bilingual vector PDF card | Public |
+| Fertilizer Engine | POST | `/fertilizer/recommendations` | Calculate ICAR-STCR precision crop dosages | Public |
+| Laboratories | GET | `/labs` | Pan-India lab directory with state/district filters | Public |
+| Laboratories | GET | `/labs/nearby` | Find nearest laboratories via lat/lng geolocation | Public |
+| Nutrient Maps | GET | `/nutrient-maps/states` | State-level macro/micronutrient stats | Public |
+| Nutrient Maps | GET | `/nutrient-maps/districts` | District-level fertility stats for a given state | Public |
+| Analytics | GET | `/analytics/overview` | Cycle I vs Cycle II national progress comparison | Public |
+| Analytics | GET | `/analytics/exports/csv` | Download national progress dataset as CSV | Public |
+| Analytics | GET | `/analytics/schools` | School Soil Health Program participation metrics | Public |
+| Support Desk | POST | `/support/tickets` | Submit citizen grievance ticket | Public |
+| Support Desk | GET | `/support/tickets/:id` | Track grievance ticket status and updates | Public |
+| Bharti AI | POST | `/assistant/chat` | Chat with Bharti AI (Groq LLM + domain fallback) | Public |
+| Locations | GET | `/locations/states` | Cascading list of all 36 states & UTs | Public |
+| Locations | GET | `/locations/districts` | Districts for a selected state | Public |
+| Admin | GET | `/admin/audit-logs` | Security and administrative audit trail | Admin Only |
 
 ---
 
-## 7. Demonstration & Evaluation Walkthrough
+## Database
 
-Follow these steps to evaluate the key capabilities in your browser:
+**Database Type:** Relational (PostgreSQL 16 via Prisma ORM)
 
-### 1. Test Bharti AI with Voice Playback & Groq LLM:
-1. Click the floating **Bharti AI** avatar in the bottom-right corner of any page.
-2. Select your preferred voice language from the dropdown (e.g., **हिन्दी**, **ગુજરાતી**, **मराठी**, **తెలుగు**, or **English**).
-3. Toggle the **"Auto-read"** checkbox to hear incoming responses read aloud automatically.
-4. Click one of the quick prompts or ask a question:
-   - *"What does low Organic Carbon (OC) mean?"*
-   - *"How do I download my Soil Health Card?"*
-   - *"Explain the STCR recommendation approach."*
-5. Click the **Listen** (🔊) button on any message to trigger native voice audio playback and view the localized script translation.
+**Key Entities:**
+1. **User**: Citizens, farmers, and the 7 administrative roles (`CENTER_ADMIN` through `PUBLIC_USER`), with JWT-based credentials.
+2. **SoilHealthCard**: 12-parameter lab scorecards linked to a farmer and location.
+3. **Laboratory**: DSTL, KVK, MSTL, and university/central institute records with geolocation.
+4. **Location**: Cascading State → District → Sub-District → Village hierarchy.
+5. **SupportTicket**: Citizen grievance tickets with status tracking.
 
-### 2. Test Soil Health Card Search & Certified PDF Download (`/soilhealthcard`):
-1. Navigate to **Get Soil Health Card** (`/soilhealthcard`).
-2. Click any of the pre-configured demo test chips:
-   - `Gurpreet Singh (Punjab, +91 9876543210)`
-   - `Rameshwar Yadav (UP, +91 9415012345)`
-   - `Sunita Patil (MH, +91 9822019921)`
-3. Check the reCAPTCHA box (*"I'm not a robot"*) and click **Search**.
-4. Examine the 12-parameter scorecard with rating pills (*Low*, *Medium*, *High*, *Sufficient*).
-5. Inspect the tailored **ICAR-STCR Fertilizer Recommendations** showing Basal and Top-Dressing splits.
-6. Click **Print & Download PDF** to view the browser print layout or download the server-generated vector PDF.
-
-### 3. Test Soil Testing Laboratories Locator (`/soilTestingLabs`):
-1. Navigate to **Find Nearest Soil Testing Lab** (`/soilTestingLabs`).
-2. Select State: **Uttar Pradesh** and District: **Agra** (or any state/district).
-3. Click **Search** to see categorized cards:
-   - *DSTL Krishi Bhawan static laboratory*
-   - *ICAR-KVK Facility at RBS College Bichpuri*
-   - *Mobile Soil Testing Rapid Van*
-4. Test the **Directions** link (Google Maps), **Call Lab** (`tel:`), and filter pills.
-
-### 4. Test Interactive GIS Nutrient Map (`/NutrientMapCycleII`):
-1. Navigate to **Nutrient Maps -> Cycle II**.
-2. Click through the nutrient layers (*Nitrogen*, *Phosphorus*, *Potassium*, *Organic Carbon*, *pH*, *Zinc*).
-3. Click on any state on the SVG map to open the district drill-down explorer.
-4. Toggle between **District Cards View** and **Full Tabular View**, then click **Export CSV**.
-
-### 5. Test Citizen Grievance Support Desk (`/support`):
-1. Navigate to **Support & Grievances** (`/support`).
-2. Fill out the "Raise a Grievance Ticket" form and submit.
-3. Note the generated reference code (e.g., `SHC-2026-XXXX`).
-4. Paste the reference code into the "Track Grievance Status" section to verify live tracking.
+```mermaid
+erDiagram
+    USER ||--o{ SOIL_HEALTH_CARD : owns
+    USER ||--o{ SUPPORT_TICKET : files
+    LOCATION ||--o{ SOIL_HEALTH_CARD : "located in"
+    LOCATION ||--o{ LABORATORY : "located in"
+    USER {
+        string id
+        string email
+        string role
+        string passwordHash
+    }
+    SOIL_HEALTH_CARD {
+        string id
+        string farmerName
+        string mobileNumber
+        json parameters
+        string locationId
+    }
+    LABORATORY {
+        string id
+        string name
+        string type
+        float latitude
+        float longitude
+    }
+    LOCATION {
+        string id
+        string state
+        string district
+        string subDistrict
+        string village
+    }
+    SUPPORT_TICKET {
+        string id
+        string userId
+        string referenceCode
+        string status
+    }
+```
 
 ---
 
-## 8. Automated Testing & Verification
+## Configuration
 
-The backend includes automated integration and unit test suites written with **Vitest**:
+- **`vite.config.js`**: Configures the `/api/tts` and `/api/translate` dev proxy middleware for Bharti AI.
+- **`prisma/schema.prisma`**: Defines the full relational schema; migrations managed via `npm run prisma:migrate`.
+- **`docker-compose.yml`**: Defines the local PostgreSQL 16 container.
+- **CORS**: Configured via `CORS_ORIGIN`, accepting a comma-separated list of allowed frontend origins.
+
+---
+
+## Build Instructions
+
+**Frontend Production Build:**
+```bash
+cd frontend
+npm run build
+```
+
+**Backend Build:**
+```bash
+cd backend
+npm run build
+```
+
+---
+
+## Deployment
+
+**Backend Deployment**
+1. Provision a PostgreSQL 16 instance and set `DATABASE_URL`.
+2. Run `npm run prisma:generate` and `npm run prisma:migrate` against the production database.
+3. Set production secrets (`JWT_SECRET`, `JWT_REFRESH_SECRET`, `AI_API_KEY`) and `CORS_ORIGIN` to the deployed frontend origin.
+4. Start command: the compiled backend entry point (`server.ts` build output).
+
+**Frontend Deployment**
+1. Set `VITE_API_BASE_URL` to the deployed backend's `/api/v1` URL.
+2. Build with `npm run build` and deploy the static output to a hosting platform (e.g., Vercel, Netlify).
+
+---
+
+## Testing
+
+The backend includes automated integration and unit test suites written with **Vitest** and **Supertest**:
 ```bash
 cd backend
 npm test
 ```
-The test suite verifies:
+The suite verifies:
 - API health and readiness endpoints (`/health`).
 - Location hierarchy cascading (`/locations/states`, `/locations/districts`).
 - Soil Health Card lookup and parameter rating calculations.
@@ -419,6 +528,114 @@ The test suite verifies:
 
 ---
 
-## 9. Legal & Educational Disclaimer
+## Logging
+
+- Backend request/response logging via **Pino** and **Pino-HTTP**, structured for production observability.
+- Administrative actions are recorded to an audit log, viewable at `/admin/audit-logs`.
+
+---
+
+## Error Handling
+
+- **Validation:** Zod schemas validate all incoming request payloads across modules.
+- **Centralized Error Middleware:** `errorHandler` middleware normalizes error responses across the API.
+- **Rate Limiting:** `express-rate-limit` protects auth and public endpoints from abuse.
+- **HTTP Errors:** Standard status codes returned via the `utils/` standardized API response helpers.
+
+---
+
+## Security
+
+- **Authentication:** JWT access and refresh token rotation with HTTP-only cookie support.
+- **Password Protection:** `bcryptjs` hashing for all stored credentials.
+- **Security Headers:** Helmet middleware applied across the Express app.
+- **RBAC:** 7 distinct roles enforced via `authorize` middleware, restricting admin-only endpoints such as `/admin/audit-logs`.
+- **Rate Limiting:** Applied to sensitive endpoints to mitigate brute-force and abuse.
+
+---
+
+## Performance Optimizations
+
+- **Offline-Resilient Frontend:** Built-in mock datasets let the frontend function fully even if the backend or AI provider is unreachable.
+- **Three-Tier AI Resilience:** Falls back from enterprise backend → direct Groq call → offline rule engine, avoiding hard failures.
+- **Server-Side PDF Streaming:** PDFKit streams certified PDFs rather than generating them fully in memory.
+- **CSV Export Services:** Dedicated, sanitized CSV exporters for large analytics datasets.
+
+---
+
+## Troubleshooting
+
+- **`Bharti AI not responding`**: Confirm `AI_API_KEY`/`VITE_GROQ_API_KEY` are set; if both fail, the app should still answer via the offline rule engine.
+- **`Database connection failed`**: Verify `DATABASE_URL` and that the PostgreSQL container (`docker-compose up -d postgres`) is running.
+- **`TTS audio not playing`**: Check that the Vite dev proxy (`/api/tts`) is reachable; the app falls back to the Web Speech API if the proxy fails.
+- **`CORS errors in development`**: Ensure `CORS_ORIGIN` on the backend includes the exact frontend origin (e.g., `http://localhost:5173`).
+
+---
+
+## Available Scripts
+
+| Command | Location | Purpose |
+|---------|----------|---------|
+| `npm run dev:frontend` | root | Start frontend dev server |
+| `npm run dev:backend` | root | Start backend dev server |
+| `npm run dev` | root | Start frontend in offline-resilient mode |
+| `npm run build` | `frontend/` or `backend/` | Build for production |
+| `npm run prisma:generate` | `backend/` | Generate Prisma client |
+| `npm run prisma:migrate` | `backend/` | Run database migrations |
+| `npm run prisma:seed` | `backend/` | Seed baseline national data |
+| `npm test` | `backend/` | Run Vitest/Supertest test suite |
+
+---
+
+## Coding Standards
+
+- **Formatting:** Oxlint for frontend linting; TypeScript strict typing on the backend.
+- **Naming Conventions:** camelCase for variables/functions, PascalCase for React components and Prisma models.
+- **Module Organization:** Backend logic strictly separated by domain under `src/modules/`.
+
+---
+
+## Contributing
+
+1. Fork the Project
+2. Create your Feature Branch (`git checkout -b feature/amazing-feature`)
+3. Commit your Changes (`git commit -m "Add: amazing feature"`)
+4. Push to the Branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+---
+
+## Roadmap
+
+- [ ] Expand ICAR-STCR crop coverage beyond the current seven major crops.
+- [ ] Add offline-first PWA support for low-connectivity rural access.
+- [ ] Extend Bharti AI with image-based soil/crop diagnosis.
+- [ ] Add real-time lab appointment scheduling.
+
+---
+
+## Known Limitations
+
+- **Simulated government data:** Laboratory, card, and analytics data are modeled/seeded for demonstration, not sourced from the live government portal.
+- **AI responses depend on Groq Cloud availability** for the two higher tiers of the resilience engine; the offline tier is rule-based and limited in scope.
+- **No production-grade load testing** has been performed on the national-scale dataset volumes described.
+
+---
+
+## License & Disclaimer
 
 This project is an independent educational and technical reverse-engineering demonstration developed for academic and evaluation purposes. It is **not** affiliated with, endorsed by, or operated by the Ministry of Agriculture and Farmers Welfare, the Government of India, the Indian Council of Agricultural Research (ICAR), or Krishitantra. All trademarks, logos, and emblems belong to their respective government entities.
+
+---
+
+## Author
+
+- **Author Name:** Sakshya Patel
+
+---
+
+## Acknowledgements
+
+- AI reasoning powered by [Groq Cloud](https://groq.com/)
+- Database ORM by [Prisma](https://www.prisma.io/)
+- Certified PDF generation via [PDFKit](https://pdfkit.org/)
